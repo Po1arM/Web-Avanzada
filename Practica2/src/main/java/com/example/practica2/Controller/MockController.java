@@ -1,8 +1,11 @@
 package com.example.practica2.Controller;
 
+import com.example.practica2.entidades.EnumMetodo;
 import com.example.practica2.entidades.Mock;
 import com.example.practica2.entidades.Proyecto;
+import com.example.practica2.entidades.seguridad.Usuario;
 import com.example.practica2.servicios.MockServices;
+import com.example.practica2.servicios.UsuarioServices;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 @Controller
 public class MockController {
@@ -27,6 +31,9 @@ public class MockController {
     private MessageSource messageSource;
     @Autowired
     private MockServices mockService;
+
+    @Autowired
+    private UsuarioServices usuarioServices;
 
     //Se usa para guardar una referencia de un proyecto
     private long proyectoID;
@@ -85,32 +92,29 @@ public class MockController {
         boolean jwt = Boolean.parseBoolean(request.getParameter("jwt"));
 
         Mock aux = new Mock(proyectoID,ruta,metodo,headers,codigo,conType,cuerpo,descripcion,nombre,expiracion,tRespuesta,jwt);
-        //MockService.addMock(aux);
+        mockService.crear(aux);
         redirectAttributes.addAttribute("idProyecto", proyectoID);
         return "redirect:/verProyecto";
     }
 
     @RequestMapping("/verEndpoint")
     public String verEndpoint(Model model, @RequestParam String id){
-        /*
-        Mock mock = MockService.buscarMockPorID(Long.parseLong(id));
+        Mock mock = mockService.buscarPorId(Long.parseLong(id));
         if(mock != null){
-            model.addAtrribute("endpoint",mock);
-            return "endPoint"
+            model.addAttribute("endpoint",mock);
+            return "endPoint";
         }else{
-            return "error"
+            return "error";
         }
-        * */
-        return "endPoint";
     }
 
     @RequestMapping(path = "/verEndpoint", method = RequestMethod.POST)
     public String editarEndpoint(WebRequest request, RedirectAttributes redirectAttributes){
         long id = Long.parseLong(request.getParameter("id"));
-        /*Mock aux = MockServices.buscarMockPorID(id);
+        Mock aux = mockService.buscarPorId(id);
         if(aux != null) {
             aux.setRuta(request.getParameter("path"));
-            aux.setMetodo(request.getParameter("verbo"));
+            aux.setMetodo(EnumMetodo.valueOf(request.getParameter("verbo")));
             aux.setHeaders(request.getParameter("header"));
             aux.setCodigo(Integer.parseInt(request.getParameter("status")));
             aux.setContype(request.getParameter("type"));
@@ -120,24 +124,24 @@ public class MockController {
             aux.setExpiracion(MockServices.calcularFecha(request.getParameter("exp")));
             aux.setTiempoRespuesta(Integer.parseInt(request.getParameter("time")));
             aux.setJwt(Boolean.parseBoolean(request.getParameter("jwt")));
-            //MockService.actualizarMock(,aux);
+            mockService.editar(aux);
 
-        }*/
+        }
         redirectAttributes.addAttribute("idProyecto", proyectoID);
         return "redirect:/verProyecto";
     }
 
     @RequestMapping("/eliminar")
     public String borrarEndpoint(RedirectAttributes redirectAttributes,@RequestParam String id){
-        //MockService.deleteMock(Long.parseLong(id));
+        mockService.eliminar(Long.parseLong(id));
         redirectAttributes.addAttribute("idProyecto", proyectoID);
         return "redirect:/verProyecto";
     }
 
     @RequestMapping("/usuarios")
     public String verUsuarios(Model model){
-        /*List<Usuario> usuarios = UsuariosServices.getUsuarios();
-        model.addAttribute("users", usuarios);*/
+        List<Usuario> usuarios = usuarioServices.listar();
+        model.addAttribute("users", usuarios);
         return "users";
     }
 
@@ -155,23 +159,29 @@ public class MockController {
     }
     @RequestMapping(path = "/addUser", method = RequestMethod.POST)
     public String addUsuario(WebRequest request){
-        /*String nombre = request.getParameter("nombre");
+        Usuario aux = new Usuario();
+        //Usuario aux = new Usuario(username,request.getParameter("pass"), true, nombre, roles);
+        aux.setUsername();
+        aux.setNombre();
+        aux.setPassword(request.getParameter("pass"));
+        aux.setActivo(true);
+        aux.setRoles();
+        String nombre = request.getParameter("nombre");
         String pass = request.getParameter("pass");
         String permiso = request.getParameter("permisos");
-
-        User aux = new User(nombre, pass, permiso);*/
-        //Llamar al servicio para registrar los usuarios
+        usuarioServices.crearUsuario(aux);
         return "redirect:/usuarios";
     }
 
     @RequestMapping("/modUser")
     public String modUser(Model model,@RequestParam String id){
-        userID = Long.parseLong(id);
-        //Usuario user = UsuarioService.buscarUserByID(userID);
-        //model.addAttribute("user",user);
+        //userID = Long.parseLong(id);
+        Usuario user = usuarioServices.buscarPorId(id);
+        model.addAttribute("user",user);
         model.addAttribute("action","addUser");
         return "addUser";
     }
+
     @RequestMapping(path = "/modUser", method = RequestMethod.POST)
     public String modUserPost(WebRequest request){
         /*String nombre = request.getParameter("nombre");
@@ -186,12 +196,13 @@ public class MockController {
     @RequestMapping("/eliminarUser")
     public String deleteUser(@RequestParam String id){
         //UserService.delete(Long.parseLong(id));
+        usuarioServices.borrarUsuario(id);
         return "redirect:/usuarios";
     }
 
     public ResponseEntity<String> accederEndpoint(Model model,@RequestParam String endpoint){
-        Mock aux = mockService.buscarMockById(Long.parseLong(endpoint));
-        //verificar que mock !
+        Mock aux = mockService.buscarPorId(Long.parseLong(endpoint));
+        //verificar que mock != null
         Date auxDate = new Date();
         if(auxDate.before(aux.getExpiracion())){
             HttpHeaders httpHeaders = new HttpHeaders();

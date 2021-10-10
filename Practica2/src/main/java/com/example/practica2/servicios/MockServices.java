@@ -16,7 +16,6 @@ public class MockServices {
     @Autowired
     private MockRepository mockRepository;
 
-    public long cantidadMocks(){return mockRepository.count();}
 
     public static Date calcularFecha(String fecha){
         int tiempo = Integer.parseInt(fecha);
@@ -26,19 +25,21 @@ public class MockServices {
     }
 
     @Transactional
-    public Mock crearMock(Mock mock){
+    public Mock crear(Mock mock){
         mockRepository.save(mock);
         return mock;
     }
 
-    public void eliminarMock (long id){
-        mockRepository.deleteById(id);
+    @Transactional
+    public void eliminar(long id){mockRepository.deleteById(id);}
+
+    public Mock buscarPorId(long parseLong) {return mockRepository.findById(parseLong).orElse(null);}
+
+    public Mock editar(Mock mock){ //incomplete
+        System.out.println("do something");
+        return new Mock();
     }
 
-    public Mock buscarMockById(long parseLong) {
-        return mockRepository.findById(parseLong).orElse(null);
-    }
-
-
+    //public long cantidadMocks(){return mockRepository.count();}
 }
 

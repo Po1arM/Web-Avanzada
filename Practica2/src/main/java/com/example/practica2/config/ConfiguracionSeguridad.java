@@ -24,23 +24,7 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
     //autentificacion de usuarios
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //Clase para encriptar contraseña
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
-
-        //Cargando los usuarios en memoria.
-        /*auth.inMemoryAuthentication().passwordEncoder(bCryptPasswordEncoder)
-                .withUser("admin")
-                .password(bCryptPasswordEncoder.encode("admin"))
-                .roles("ADMIN","USER")
-                .and()
-                .withUser("usuario")
-                .password(bCryptPasswordEncoder.encode("1234"))
-                .roles("USER")
-                .and()
-                .withUser("vendedor")
-                .password(bCryptPasswordEncoder.encode("1234"))
-                .roles("VENDEDOR");*/
-
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 

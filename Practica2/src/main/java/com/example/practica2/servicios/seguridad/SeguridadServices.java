@@ -32,10 +32,8 @@ public class SeguridadServices implements UserDetailsService {
      * Creando el usuario por defecto y su rol.
      */
     public void crearUsuarioAdmin(){
-        System.out.println("Creación del usuario y rol en la base de datos");
         Rol rolAdmin = new Rol("ADMIN");
         rolRepository.save(rolAdmin);
-
         Usuario admin = new Usuario();
         admin.setUsername("admin");
         admin.setPassword(bCryptPasswordEncoder.encode("admin"));

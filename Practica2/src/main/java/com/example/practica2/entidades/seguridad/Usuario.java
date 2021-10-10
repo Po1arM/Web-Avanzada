@@ -24,6 +24,17 @@ public class Usuario implements Serializable {
     //@JsonIgnore
     private List<Mock> mocks = new ArrayList<>();
 
+    public Usuario(){}
+    public Usuario(String username, String password, boolean activo, String nombre, Set<Rol> roles) {
+        this.username = username;
+        this.password = password;
+        this.activo = activo;
+        this.nombre = nombre;
+        this.roles = roles;
+    }
+
+
+
     public String getUsername() {
         return username;
     }
