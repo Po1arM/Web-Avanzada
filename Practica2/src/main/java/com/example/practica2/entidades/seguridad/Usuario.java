@@ -1,7 +1,11 @@
 package com.example.practica2.entidades.seguridad;
 
+import com.example.practica2.entidades.Mock;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -11,14 +15,14 @@ public class Usuario implements Serializable {
     private String username;
     private String password;
     private boolean activo;
-    //Tener todos los campos necesarios de mi modelo..
     private String nombre;
 
-    //relación
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private
-    Set<Rol> roles;
+    private Set<Rol> roles;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,  orphanRemoval = true)
+    //@JsonIgnore
+    private List<Mock> mocks = new ArrayList<>();
 
     public String getUsername() {
         return username;

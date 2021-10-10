@@ -1,5 +1,6 @@
 package com.example.practica2.config;
 
+import com.example.practica2.servicios.seguridad.SeguridadServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,32 +10,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import javax.sql.DataSource;
 
-/**
- * Created by vacax on 27/09/16.
- */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
 
-    //Configuación para la validación del acceso modo JDBC
-    @Autowired
-    private DataSource dataSource;
-    @Value("${query.user-jdbc}")
-    private String queryUsuario;
-    @Value("${query.rol-jdbc}")
-    private String queryRol;
     //Opción JPA
     @Autowired
-    private UserDetailsService userDetailsService;
+    private SeguridadServices userDetailsService;
+    //private UserDetailsService userDetailsService;
 
-    /**
-     * La autentificación de los usuarios.
-     * @param auth
-     * @throws Exception
-     */
+    //autentificacion de usuarios
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //Clase para encriptar contraseña
@@ -54,26 +41,10 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
                 .password(bCryptPasswordEncoder.encode("1234"))
                 .roles("VENDEDOR");*/
 
-
-
-        //Configuración para acceso vía JDBC
-        /*auth.jdbcAuthentication()
-                .usersByUsernameQuery(queryUsuario)
-                .authoritiesByUsernameQuery(queryRol)
-                .dataSource(dataSource)
-                .passwordEncoder(bCryptPasswordEncoder);*/
-
-        //Configuración JPA.
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(bCryptPasswordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-    /*
-     * Permite configurar las reglas de seguridad.
-     * @param http
-     * @throws Exception
-     */
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //Marcando las reglas para permitir unicamente los usuarios

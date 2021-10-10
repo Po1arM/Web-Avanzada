@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Entity
 public class Mock implements Serializable {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,20 +14,21 @@ public class Mock implements Serializable {
 
     private long idProyecto;
     private String ruta;
-    private String metodo; //considerar ENUM //get, post...
+
+    @Enumerated(EnumType.STRING)
+    private EnumMetodo metodo; //get, post...
+    //private Map<String, String> headers = new HashMap<String, String>();
     private String headers; //usar map
     private int codigo; // 200, 404...
     private String contype; //otro droplist
     private String cuerpo;
     private String descripcion; // nombre y descripcion del endpoint
     private String nombre;
-    private Date expiracion; // 1 mes, semana, dia u hora. ENUM??
+    private Date expiracion;
     private int tiempoRespuesta; //en segundos, default 0
     private Boolean jwt;
 
-    public Mock(){
-
-    }
+    public Mock(){}
     public Mock(long proyectoID, String ruta, String metodo, String headers, int codigo, String conType, String cuerpo, String descripcion, String nombre, Date expiracion, int tRespuesta, boolean jwt) {
     }
 
@@ -42,7 +44,7 @@ public class Mock implements Serializable {
         this.ruta = ruta;
     }
 
-    public void setMetodo(String metodo) {
+    public void setMetodo(EnumMetodo metodo) {
         this.metodo = metodo;
     }
 
@@ -90,7 +92,7 @@ public class Mock implements Serializable {
         return ruta;
     }
 
-    public String getMetodo() {
+    public EnumMetodo getMetodo() {
         return metodo;
     }
 
@@ -129,4 +131,5 @@ public class Mock implements Serializable {
     public Boolean getJwt() {
         return jwt;
     }
+
 }

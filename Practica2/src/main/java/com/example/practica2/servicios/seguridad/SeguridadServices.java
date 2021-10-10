@@ -1,9 +1,9 @@
 package com.example.practica2.servicios.seguridad;
 
-import edu.pucmm.pwa.entidades.seguridad.Rol;
-import edu.pucmm.pwa.entidades.seguridad.Usuario;
-import edu.pucmm.pwa.repositorio.seguridad.RolRepository;
-import edu.pucmm.pwa.repositorio.seguridad.UsuarioRepository;
+import com.example.practica2.entidades.seguridad.Rol;
+import com.example.practica2.entidades.seguridad.Usuario;
+import com.example.practica2.repositorio.seguridad.RolRepository;
+import com.example.practica2.repositorio.seguridad.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -34,7 +33,7 @@ public class SeguridadServices implements UserDetailsService {
      */
     public void crearUsuarioAdmin(){
         System.out.println("Creación del usuario y rol en la base de datos");
-        Rol rolAdmin = new Rol("ROLE_ADMIN");
+        Rol rolAdmin = new Rol("ADMIN");
         rolRepository.save(rolAdmin);
 
         Usuario admin = new Usuario();

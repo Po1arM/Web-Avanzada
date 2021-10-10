@@ -25,6 +25,8 @@ import java.util.Iterator;
 public class MockController {
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private MockServices mockService;
 
     //Se usa para guardar una referencia de un proyecto
     private long proyectoID;
@@ -188,7 +190,8 @@ public class MockController {
     }
 
     public ResponseEntity<String> accederEndpoint(Model model,@RequestParam String endpoint){
-        Mock aux = MockServices.buscarMockById(Long.parseLong(endpoint));
+        Mock aux = mockService.buscarMockById(Long.parseLong(endpoint));
+        //verificar que mock !
         Date auxDate = new Date();
         if(auxDate.before(aux.getExpiracion())){
             HttpHeaders httpHeaders = new HttpHeaders();

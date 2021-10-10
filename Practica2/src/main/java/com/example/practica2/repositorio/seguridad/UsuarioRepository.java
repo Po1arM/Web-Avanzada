@@ -1,6 +1,6 @@
 package com.example.practica2.repositorio.seguridad;
 
-import edu.pucmm.pwa.entidades.seguridad.Usuario;
+import com.example.practica2.entidades.seguridad.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
