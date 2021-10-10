@@ -48,6 +48,10 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.8'
 
+    //Manejador de Json
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.google.code.gson:gson:2.8.7'
+
 }
 
 dependencyManagement {

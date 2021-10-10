@@ -14,7 +14,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <a class="navbar-brand" th:text="MockeClone" th:href="@{/Mock/}">MockeClone</a>
+        <a class="navbar-brand" th:text="MockeClone" th:href="@{proyectos}">MockeClone</a>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
             <div style="display: flex;justify-content: flex-end; ">
@@ -45,7 +45,7 @@
             <div class="card ">
                 <div class="card-body pl-6 pr-6">
                     <h4 class="card-title" th:text="${proyecto.id}"</h4>
-                    <h5 class="card-text" th:text="Endpoints ${proyecto.endpoints.len}"></h5>
+                    <h5 class="card-text" th:text="Endpoints ${proyecto.endoPoints}"></h5>
                     <a th:text="#{proyecto1}" th:href="@{verProyecto(id =${proyecto.id})}" class="btn btn-primary">Administrar</a>
                 </div>
             </div>
