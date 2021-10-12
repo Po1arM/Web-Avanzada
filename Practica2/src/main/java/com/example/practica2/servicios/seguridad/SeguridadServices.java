@@ -26,14 +26,12 @@ public class SeguridadServices implements UserDetailsService {
     //Para encriptar la información.
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    //cualquier cosa...
-
-    /**
-     * Creando el usuario por defecto y su rol.
-     */
     public void crearUsuarioAdmin(){
-        Rol rolAdmin = new Rol("ADMIN");
+        System.out.println("Creación del usuario y rol en la base de datos");
+        Rol rolAdmin = new Rol("ROLE_ADMIN");
         rolRepository.save(rolAdmin);
+        rolRepository.save(new Rol("ROLE_USER"));
+
         Usuario admin = new Usuario();
         admin.setUsername("admin");
         admin.setPassword(bCryptPasswordEncoder.encode("admin"));
@@ -43,17 +41,16 @@ public class SeguridadServices implements UserDetailsService {
         usuarioRepository.save(admin);
     }
 
-    /**
-     *
-     * @param username
-     * @return
-     * @throws UsernameNotFoundException
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario user = usuarioRepository.findByUsername(username);
-
+        if (user == null){
+            System.out.println("ERROR NULL MMG");
+        }else{
+            System.out.println("encontrado" + user.getUsername());
+        }
         Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
+        assert user != null;
         for (Rol role : user.getRoles()) {
             roles.add(new SimpleGrantedAuthority(role.getRole()));
         }

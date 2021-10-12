@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class MockController {
@@ -40,17 +42,21 @@ public class MockController {
     private long userID;
 
     @RequestMapping("/")
-    public String login(){
-        return "login";
+    public String index(){
+        return "index";
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
+    /*@RequestMapping(path = "/login", method = RequestMethod.POST)
     public String autentificar(Model model, WebRequest request){
         String usuario = request.getParameter("nombre");
         String pass = request.getParameter("pass");
 
         //Verificar credenciales de usuario, si existe se hace redireccion a index donde se muestran los proyectos del usuario, si no, se vuelve al login
         return "redirect:/verProyectos/"; //+ id del usuario
+    }*/
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView getLoginPage(@RequestParam Optional<String> error) {
+        return new ModelAndView("login", "error", error);
     }
 
     @RequestMapping("/proyectos")
@@ -157,7 +163,7 @@ public class MockController {
         model.addAttribute("action","addUser");
         return "addUser";
     }
-    @RequestMapping(path = "/addUser", method = RequestMethod.POST)
+    /*@RequestMapping(path = "/addUser", method = RequestMethod.POST)
     public String addUsuario(WebRequest request){
         Usuario aux = new Usuario();
         //Usuario aux = new Usuario(username,request.getParameter("pass"), true, nombre, roles);
@@ -171,7 +177,7 @@ public class MockController {
         String permiso = request.getParameter("permisos");
         usuarioServices.crearUsuario(aux);
         return "redirect:/usuarios";
-    }
+    }*/
 
     @RequestMapping("/modUser")
     public String modUser(Model model,@RequestParam String id){

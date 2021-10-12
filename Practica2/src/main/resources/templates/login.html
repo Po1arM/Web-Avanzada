@@ -34,14 +34,14 @@
 </nav>
 <div class="container-fluid">
     <div  style="width: 80%">
-        <form method="post" action="@{login}">
+        <form role="form" action="/login" method="post">
             <div class="mb-3">
-                <label for="nombre" class="form-label" th:text="#{user1}">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre">
+                <label for="username" class="form-label" th:text="#{user1}">Nombre</label>
+                <input type="text" class="form-control" id="username" name="username">
             </div>
             <div class="mb-3">
-                <label for="pass" class="form-label" th:text="#{user2}">Contraseña</label>
-                <input type="password" class="form-control" id="pass" name="pass" >
+                <label for="password" class="form-label" th:text="#{user2}">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" >
             </div>
             <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group me-2" role="group">
