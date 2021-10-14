@@ -7,14 +7,18 @@ import com.example.practica2.repositorio.MockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 
 @Service
 public class MockServices {
 
     @Autowired
-    private MockRepository mockRepository;
+    private static MockRepository mockRepository;
+
+    public static List<Mock> buscarMocksPorProyectoId(long proyectoID) {
+        return mockRepository.findAllByIdProyecto(proyectoID);
+    }
 
 
     public static Date calcularFecha(String fecha){
@@ -39,7 +43,12 @@ public class MockServices {
         System.out.println("do something");
         return new Mock();
     }
+    public Mock buscarMockPorID(long parseLong) {
+        return mockRepository.findById(parseLong).orElse(null);
+    }
 
-    //public long cantidadMocks(){return mockRepository.count();}
+    public void actualizarMock(Mock aux) {
+        mockRepository.save(aux);
+    }
 }
 

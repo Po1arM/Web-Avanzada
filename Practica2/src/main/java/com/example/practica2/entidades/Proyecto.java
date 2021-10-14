@@ -10,6 +10,6 @@ public class Proyecto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String idUsuario;
+    private long idUsuario;
     private int endoPoints;
 }

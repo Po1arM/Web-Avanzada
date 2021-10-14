@@ -32,15 +32,13 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
         //Marcando las reglas para permitir unicamente los usuarios
         http
                 .authorizeRequests()
-                .antMatchers("/","/css/**", "/js/**", "/actuator/**", "/webjars/**").hasAnyRole("USER","ADMIN") //permitiendo llamadas a esas urls.
-                .antMatchers("/dbconsole/**").permitAll()
-                .antMatchers("/thymeleaf/**", "/freemarker/**", "/api/**", "/jpa/**").permitAll()
-                .antMatchers("/admin/").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/**").permitAll()
+                .antMatchers("/usuarios","/verProyectos","/addUser","/modUser","eliminarUser").hasAnyRole("ADMIN")
                 .anyRequest().authenticated() //cualquier llamada debe ser validada
                 .and()
                 .formLogin()
-                .loginPage("/login") //indicando la ruta que estaremos utilizando.
-                .failureUrl("/login?error") //en caso de fallar puedo indicar otra pagina.
+                .loginPage("/login")
+                .failureUrl("/login")
                 .permitAll()
                 .and()
                 .logout()

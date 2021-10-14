@@ -15,9 +15,11 @@ public class Mock implements Serializable {
     private long idProyecto;
     private String ruta;
 
+    /*
+    //private Map<String, String> headers = new HashMap<String, String>();
+    */
     @Enumerated(EnumType.STRING)
     private EnumMetodo metodo; //get, post...
-    //private Map<String, String> headers = new HashMap<String, String>();
     private String headers; //usar map
     private int codigo; // 200, 404...
     private String contype; //otro droplist
