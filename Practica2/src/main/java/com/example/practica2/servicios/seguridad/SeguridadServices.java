@@ -18,7 +18,7 @@ import java.util.*;
 public class SeguridadServices implements UserDetailsService {
 
     @Autowired
-    private static UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private RolRepository rolRepository;
@@ -60,7 +60,7 @@ public class SeguridadServices implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.isActivo(), true, true, true, grantedAuthorities);
     }
 
-    public static List<Usuario> getUsuarios(){
+    public List<Usuario> getUsuarios(){
         return usuarioRepository.findAll();
     }
 }

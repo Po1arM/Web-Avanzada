@@ -70,8 +70,14 @@ public class Usuario implements Serializable {
     public Set<Rol> getRoles() {
         return roles;
     }
+    public String getRol() {
+        ArrayList<Rol> rol = new ArrayList<>(roles);
+        return rol.get(0).getRole();
+    }
 
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
     }
+
+
 }

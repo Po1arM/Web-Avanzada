@@ -31,8 +31,7 @@ public class Mock implements Serializable {
     private Boolean jwt;
 
     public Mock(){}
-    public Mock(long proyectoID, String ruta, String metodo, String headers, int codigo, String conType, String cuerpo, String descripcion, String nombre, Date expiracion, int tRespuesta, boolean jwt) {
-    }
+
 
     public Long getId() {
         return id;
@@ -94,8 +93,8 @@ public class Mock implements Serializable {
         return ruta;
     }
 
-    public EnumMetodo getMetodo() {
-        return metodo;
+    public String getMetodo() {
+        return metodo.toString();
     }
 
     public String getHeaders() {
@@ -134,4 +133,7 @@ public class Mock implements Serializable {
         return jwt;
     }
 
+    public void setIdProyecto(long idProyecto) {
+        this.idProyecto = idProyecto;
+    }
 }

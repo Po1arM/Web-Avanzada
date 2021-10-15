@@ -35,20 +35,21 @@
 </nav>
 <div class="container-fluid">
     <div  style="width: 80%">
-        <form method="post" action="${action}">
+        <form method="post" th:action="${action}">
             <div class="mb-3">
                 <label for="nombre" class="form-label" th:text="#{user1}">Nombre</label>
                 <input type="text" class="form-control" id="nombre" name="nombre" th:value ="${user != null} ? ${user.nombre} : ''">
             </div>
             <div class="mb-3">
                 <label for="pass" class="form-label" th:text="#{user2}">Contraseña</label>
-                <input type="password" class="form-control" id="pass" name="pass" th:value ="${user != null} ? ${user.pass} : ''">
+                <input type="password" class="form-control" id="pass" name="pass" th:value ="${user != null} ? ${user.getPassword()} : ''">
             </div>
             <div class="mb-3">
-                <label for="permisos" class="form-label" th:text="#{user2}">Permisos</label>
+                <label for="permisos" class="form-label" th:text="#{user3}">Permisos</label>
                 <select  class="form-control" id="permisos" name="permisos">
                     <option value=""></option>
-                    <option value="ADMIN">Admin</option>
+                    <option value="ROLE_USER">Usuario</option>
+                    <option value="ROLE_ADMIN">Admin</option>
 
                 </select>
             </div>

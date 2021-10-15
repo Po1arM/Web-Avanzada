@@ -36,7 +36,7 @@
 <div class="container-fluid">
     <div  style="width: 80%">
         <div class="card-body" style="width: 80%; margin-left: 9%">
-            <a class="btn btn-primary" th:href="@{addProyecto}" th:text="'+' + #{proyecto}">+ Proyecto</a>
+            <a class="btn btn-primary" th:href="@{addProyecto(username = ${username})}" th:text="'+' + #{proyecto}">+ Proyecto</a>
         </div>
 
 
@@ -44,9 +44,9 @@
         <div class="mx-auto" style="width: 80%">
             <div class="card ">
                 <div class="card-body pl-6 pr-6">
-                    <h4 class="card-title" th:text="${proyecto.id}"</h4>
-                    <h5 class="card-text" th:text="Endpoints ${proyecto.endoPoints}"></h5>
-                    <a th:text="#{proyecto1}" th:href="@{verProyecto(id =${proyecto.id})}" class="btn btn-primary">Administrar</a>
+                    <h4 class="card-title" th:text="'Codigo del proyecto: ' + ${proyecto.id}"></h4>
+                    <h5 class="card-text" th:text="'Cantidad de Endpoints: ' + ${proyecto.getEndoPoints()}"></h5>
+                    <a th:text="Administrar" th:href="@{verProyecto(idProyecto =${proyecto.id})}" class="btn btn-primary">Administrar</a>
                 </div>
             </div>
         </div>

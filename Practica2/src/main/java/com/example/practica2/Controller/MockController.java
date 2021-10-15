@@ -1,14 +1,17 @@
 package com.example.practica2.Controller;
 
+import com.ctc.wstx.util.SymbolTable;
 import com.example.practica2.entidades.EnumMetodo;
 import com.example.practica2.entidades.Mock;
 import com.example.practica2.entidades.Proyecto;
+import com.example.practica2.entidades.seguridad.Rol;
 import com.example.practica2.entidades.seguridad.Usuario;
+import com.example.practica2.repositorio.seguridad.MockRepository;
+import com.example.practica2.repositorio.seguridad.ProyectoRepository;
 import com.example.practica2.servicios.MockServices;
 
 import com.example.practica2.servicios.ProyectoServices;
 import com.example.practica2.servicios.UsuarioServices;
-import com.example.practica2.servicios.seguridad.SeguridadServices;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,67 +19,77 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MockController {
     @Autowired
     private MessageSource messageSource;
     @Autowired
-    private MockServices mockService;
+    private MockRepository mockRepository;
 
     @Autowired
     private UsuarioServices usuarioServices;
 
+    @Autowired
+    private ProyectoRepository proyectoRepository;
     //Se usa para guardar una referencia de un proyecto
     private long proyectoID;
-    private long userID;
+
 
     @RequestMapping("/")
-    public String index(){
+    public String index(Model model){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username;
+        if (principal instanceof UserDetails) {
+             username = ((UserDetails)principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        model.addAttribute("username",username);
+        List<Proyecto> proyectos = proyectoRepository.findAllByUsername(username);
+        model.addAttribute("proyects",proyectos);
         return "index";
     }
 
-    /*@RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String autentificar(Model model, WebRequest request){
-        String usuario = request.getParameter("nombre");
-        String pass = request.getParameter("pass");
-
-        //Verificar credenciales de usuario, si existe se hace redireccion a index donde se muestran los proyectos del usuario, si no, se vuelve al login
-        return "redirect:/verProyectos/"; //+ id del usuario
-    }*/
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView getLoginPage(@RequestParam String error) {
-        return new ModelAndView("login", "error", "error");
+    public String getLoginPage() {
+        return "login";
     }
+    @RequestMapping("addProyecto")
+    public String addProyecto(Model model, @RequestParam String username,RedirectAttributes redirectAttributes){
+        Proyecto proyecto = new Proyecto();
+        proyecto.setUsername(username);
+        proyecto.setEndoPoints(0);
+        System.out.println(proyecto.getUsername());
+        proyecto = proyectoRepository.save(proyecto);
 
+        redirectAttributes.addAttribute("username",username);
+
+        return "redirect:/proyectos";
+    }
     @RequestMapping("/proyectos")
-    public String verProyectos(Model model, @RequestParam String id){
-        long idUser = Long.parseLong(id);
-        List<Proyecto> misProyectos = ProyectoServices.buscarProyectosPorUserId(idUser);
-        model.addAttribute("proyects", misProyectos);
-
-        return "index";
+    public String verProyectos(Model model){
+        return "redirect:/";
     }
 
     @RequestMapping("/verProyecto")
     public String verEndPoints(Model model, @RequestParam String idProyecto){
         proyectoID = Long.parseLong(idProyecto);
 
-        List<Mock> mocks = MockServices.buscarMocksPorProyectoId(proyectoID);
+        List<Mock> mocks = mockRepository.findAllByIdProyecto(proyectoID);
         model.addAttribute("endpoints", mocks);
-
         model.addAttribute("action","verEndpoint");
         return "proyecto";
     }
@@ -87,27 +100,33 @@ public class MockController {
     }
     @RequestMapping(path = "/addEndpoint", method = RequestMethod.POST)
     public String crearEndpoint(WebRequest request, RedirectAttributes redirectAttributes){
-        String ruta = request.getParameter("path");
-        String metodo = request.getParameter("verbo");
-        String headers = request.getParameter("header");
-        int codigo = Integer.parseInt(request.getParameter("status"));
-        String conType = request.getParameter("type");
-        String cuerpo = request.getParameter("body");
-        String descripcion = request.getParameter("descripcion");
-        String nombre = request.getParameter("nombre");
-        Date expiracion = MockServices.calcularFecha(request.getParameter("exp"));
-        int tRespuesta = Integer.parseInt(request.getParameter("time"));
-        boolean jwt = Boolean.parseBoolean(request.getParameter("jwt"));
+        Mock aux = new Mock();
 
-        Mock aux = new Mock(proyectoID,ruta,metodo,headers,codigo,conType,cuerpo,descripcion,nombre,expiracion,tRespuesta,jwt);
-        aux = mockService.crear(aux);
+        aux.setRuta(request.getParameter("path"));
+        aux.setMetodo(EnumMetodo.valueOf(request.getParameter("verbo")));
+        aux.setHeaders(request.getParameter("header"));
+        aux.setCodigo(Integer.parseInt(request.getParameter("status")));
+        aux.setContype(request.getParameter("type"));
+        aux.setCuerpo(request.getParameter("body"));
+        aux.setDescripcion(request.getParameter("descripcion"));
+        aux.setNombre(request.getParameter("nombre"));
+        aux.setExpiracion(MockServices.calcularFecha(request.getParameter("exp")));
+        aux.setTiempoRespuesta(Integer.parseInt(request.getParameter("time")));
+        aux.setJwt(Boolean.parseBoolean(request.getParameter("jwt")));
+        aux.setIdProyecto(proyectoID);
+        System.out.println(proyectoID);
+        aux = mockRepository.save(aux);
+
+        Proyecto au1 = proyectoRepository.getById(proyectoID);
+        au1.setEndoPoints(au1.getEndoPoints() + 1);
+        proyectoRepository.save(au1);
         redirectAttributes.addAttribute("idProyecto", proyectoID);
         return "redirect:/verProyecto";
     }
 
     @RequestMapping("/verEndpoint")
     public String verEndpoint(Model model, @RequestParam String id){
-        Mock mock = mockService.buscarMockPorID(Long.parseLong(id));
+        Mock mock = mockRepository.findById(Long.parseLong(id));
         if(mock != null){
             model.addAttribute("endpoint",mock);
             return "endPoint";
@@ -119,7 +138,7 @@ public class MockController {
     @RequestMapping(path = "/verEndpoint", method = RequestMethod.POST)
     public String editarEndpoint(WebRequest request, RedirectAttributes redirectAttributes){
         long id = Long.parseLong(request.getParameter("id"));
-        Mock aux = mockService.buscarMockPorID(id);
+        Mock aux = mockRepository.findById(id);
         if(aux != null) {
             aux.setRuta(request.getParameter("path"));
             aux.setMetodo(EnumMetodo.valueOf(request.getParameter("verbo")));
@@ -132,16 +151,16 @@ public class MockController {
             aux.setExpiracion(MockServices.calcularFecha(request.getParameter("exp")));
             aux.setTiempoRespuesta(Integer.parseInt(request.getParameter("time")));
             aux.setJwt(Boolean.parseBoolean(request.getParameter("jwt")));
-            mockService.editar(aux);
+            mockRepository.save(aux);
 
         }
         redirectAttributes.addAttribute("idProyecto", proyectoID);
         return "redirect:/verProyecto";
     }
 
-    @RequestMapping("/eliminar")
+    @RequestMapping("/eliminarEndpoint")
     public String borrarEndpoint(RedirectAttributes redirectAttributes,@RequestParam String id){
-        mockService.eliminar(Long.parseLong(id));
+        mockRepository.deleteById(Long.parseLong(id));
         redirectAttributes.addAttribute("idProyecto", proyectoID);
         return "redirect:/verProyecto";
     }
@@ -150,12 +169,13 @@ public class MockController {
     public String verUsuarios(Model model){
         List<Usuario> usuarios = usuarioServices.listar();
         model.addAttribute("users", usuarios);
+
         return "users";
     }
 
     @RequestMapping("/verProyectos")
-    public String verProyectosByUser(Model model,@RequestParam String userID){
-        List<Proyecto> misProyectos = ProyectoServices.buscarProyectosPorUserId(Long.parseLong(userID));
+    public String verProyectosByUser(Model model,@RequestParam String username){
+        List<Proyecto> misProyectos = proyectoRepository.findAllByUsername(username);
         model.addAttribute("proyects",misProyectos);
         return "index";
     }
@@ -168,15 +188,18 @@ public class MockController {
 
     @RequestMapping(path = "/addUser", method = RequestMethod.POST)
     public String addUsuario(WebRequest request){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
         Usuario aux = new Usuario();
-        String nombre = request.getParameter("nombre");
-        String pass = request.getParameter("pass");
+
         String permiso = request.getParameter("permisos");
-        aux.setUsername(nombre);
-        aux.setNombre(pass);
-        aux.setPassword(request.getParameter("pass"));
+
+        aux.setUsername(request.getParameter("nombre"));
+        aux.setNombre(request.getParameter("nombre"));
+        aux.setPassword(bCryptPasswordEncoder.encode(request.getParameter("pass")));
         aux.setActivo(true);
-       // aux.setRoles(permiso);
+        Rol rol = new Rol(permiso);
+        aux.setRoles(new HashSet<>(Arrays.asList(rol)));
 
         usuarioServices.crearUsuario(aux);
 
@@ -210,9 +233,9 @@ public class MockController {
         return "redirect:/usuarios";
     }
 
-
+    @RequestMapping("/accederEndpoint")
     public ResponseEntity<String> accederEndpoint(Model model,@RequestParam String id){
-        Mock aux = mockService.buscarMockPorID(Long.parseLong(id));
+        Mock aux = mockRepository.findById(Long.parseLong(id));
         Date auxDate = new Date();
         if(auxDate.before(aux.getExpiracion())){
             HttpHeaders httpHeaders = new HttpHeaders();

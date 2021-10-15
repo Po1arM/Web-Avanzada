@@ -32,7 +32,7 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
         //Marcando las reglas para permitir unicamente los usuarios
         http
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**").hasAnyRole("ADMIN","USER")
                 .antMatchers("/usuarios","/verProyectos","/addUser","/modUser","eliminarUser").hasAnyRole("ADMIN")
                 .anyRequest().authenticated() //cualquier llamada debe ser validada
                 .and()

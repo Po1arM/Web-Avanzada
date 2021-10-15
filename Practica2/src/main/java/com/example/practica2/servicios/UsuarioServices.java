@@ -43,4 +43,8 @@ public class UsuarioServices {
     public Usuario buscarPorId(String id){
         return usuarioRepository.findById(id).orElse(null);
     }
+    public Usuario buscarPorUser(String user){
+        return usuarioRepository.findByUsername(user);
+    }
+
 }

@@ -42,7 +42,7 @@
             <div class="mx-auto" style="width: 80%">
                 <div class="card ">
                     <div class="card-body pl-6 pr-6">
-                        <h4 class="card-title" th:text="${endpoint.nombre}/${endpoint.metodo}"</h4>
+                        <h4 class="card-title" th:text= "${endpoint.nombre} +'/'+ ${endpoint.getMetodo()}"></h4>
                         <a class="card-text" th:text="${endpoint.ruta}" th:href="@{accederEndpoint (id = ${endpoint.id})}"></a>
                         <div class="btn-toolbar" role="toolbar">
                             <div class="btn-group me-2" role="group">

@@ -40,37 +40,39 @@
 
         <div class="mb-3">
           <label for="nombre" class="form-label" th:text="#{form1}">Nombre</label>
-          <input type="text" class="form-control" id="nombre" name="nombre" th:value ="${endpoint != null} ? ${endpoint.nombre} : ''">
+          <input type="text" class="form-control" id="nombre" name="nombre" th:value ="${endpoint != null} ? ${endpoint.nombre} : ''" required>
         </div>
 
         <div class="mb-3">
           <label for="descripcion" class="form-label" th:text="#{form2}">Descripcion</label>
-          <input type="text" class="form-control" id="descripcion" name="descripcion" th:value ="${endpoint != null} ? ${endpoint.descripcion} : ''">
+          <input type="text" class="form-control" id="descripcion" name="descripcion" th:value ="${endpoint != null} ? ${endpoint.descripcion} : ''" required>
         </div>
 
         <div class="mb-3">
           <label for="verbo" class="form-label" th:text="#{form3}">Verbo</label>
-          <select class="form-select" id="verbo" name="verbo" >
-            <option value="get">Get</option>
-            <option value="post">Post</option>
-            <option value="put">Put</option>
-            <option value="patch">Patch</option>
-            <option value="delete">Delete</option>
-            <option value="options">Options</option>
+          <select class="form-select" id="verbo" name="verbo" required >
+            <option value="GET">Get</option>
+            <option value="POST">Post</option>
+            <option value="PUT">Put</option>
+            <option value="PATCH">Patch</option>
+            <option value="DELETE">Delete</option>
+            <option value="OPTIONS">Options</option>
+            <option th:text="${endpoint != null} ? ${endpoint.getRuta()} : ''" th:value=" ${endpoint != null} ? ${endpoint.getMetodo()} : ''" selected></option>
           </select>
         </div>
 
         <div class="mb-3">
           <label for="path" class="form-label" th:text="#{form4}">Path</label>
-          <input type="text" class="form-control" id="path" name="path" th:value ="${endpoint != null} ? ${endpoint.path} : ''">
+          <input type="text" class="form-control" id="path" name="path" th:value ="${endpoint != null} ? ${endpoint.getRuta()} : ''" required>
         </div>
 
         <div class="mb-3">
           <label for="status" class="form-label" th:text="#{form5}" data-live-search="true">Estatus de Respuesta</label>
-          <input list="encodings"  class="col-sm-12 form-control" id="status" name="status">
+          <input list="encodings"  class="col-sm-12 form-control" id="status" name="status" required>
           <datalist id="encodings">
+            <option th:text="${endpoint != null} ? ${endpoint.getCodigo()} : ''" selected th:value="${endpoint != null} ? ${endpoint.getCodigo()} : ''"></option>
 
-          <option value="100">Continue</option>
+            <option value="100">Continue</option>
             <option value="101">Switching Protocols</option>
             <option value="102">Processing</option>
             <option value="103">Checkpoint</option>
@@ -142,8 +144,8 @@
         </div>
 
         <div class="mb-3">
-          <label for="type" class="form-label" th:text="Content-Type" data-live-search="true"Content-Type></label>
-          <select list="content"  class="col-sm-12 form-control" id="type" name="type">
+          <label for="type" class="form-label" th:text="Content-Type" data-live-search="true"Content-Type ></label>
+          <select list="content"  class="col-sm-12 form-control" id="type" name="type" required>
           <datalist id="content">
             <option value="application/json">application/json</option>
             <option value="application/xhtml+xml">application/xhtml+xml</option>
@@ -159,19 +161,19 @@
 
         <div class="mb-3">
           <label for="header" class="form-label" th:text="Headers" data-live-search="true">Headers</label>
-          <textarea class="form-control" id="header" name="header" th:value ="${endpoint != null} ? ${endpoint.headers} : ''">
+          <textarea class="form-control" id="header" name="header" th:text="${endpoint != null} ? ${endpoint.headers} : ''" required>
           </textarea>
         </div>
 
         <div class="mb-3">
           <label for="body" class="form-label" th:text="#{form6}" data-live-search="true">Cuerpo</label>
-          <textarea class="form-control" id="body" name="body" th:value ="${endpoint != null} ? ${endpoint.body} : ''">
+          <textarea class="form-control" id="body" name="body" th:text ="${endpoint != null} ? ${endpoint.getCuerpo()} : ''" required>
           </textarea>
         </div>
 
         <div class="mb-3">
           <label for="exp" class="form-label" th:text="#{form7}" data-live-search="true"Content-Type>Tiempo de expiracion</label>
-          <select list="ex"  class="col-sm-12 form-control" id="exp" name="exp">
+          <select list="ex"  class="col-sm-12 form-control" id="exp" name="exp" required>
             <datalist id="ex">
               <option value="1">1 hora</option>
               <option value="24">1 dia</option>
@@ -184,7 +186,7 @@
 
         <div class="mb-3">
           <label for="time" class="form-label" th:text="#{form8}">Tiempo de Demora (valor en segundos)</label>
-          <input type="number" class="form-control" id="time" name="time" th:value ="${endpoint != null} ? ${endpoint.time} : ''">
+          <input type="number" class="form-control" id="time" name="time" th:value ="${endpoint != null} ? ${endpoint.getTiempoRespuesta()} : ''" required min="0">
         </div>
 
         <div class="mb-3">

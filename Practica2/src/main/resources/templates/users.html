@@ -36,20 +36,20 @@
 <div class="container-fluid">
     <div  style="width: 80%">
         <div class="card-body" style="width: 80%; margin-left: 9%">
-            <a class="btn btn-primary" th:href="@{addUser}" th:text="'+' #{user1}"></a>
+            <a class="btn btn-primary" th:href="@{addUser}" th:text="'+' + #{user1}"></a>
         </div>
         <th:block th:each = "user : ${users}">
             <div class="mx-auto" style="width: 80%">
                 <div class="card ">
                     <div class="card-body pl-6 pr-6">
-                        <h4 class="card-title" th:text="${user.nombre}/${user.permiso}"</h4>
-                        <a class="card-text" th:text="${user.proyectos.len}" th:href="@{verProyectos (id = ${user.id})}"></a>
+                        <h4 class="card-title" th:text="${user.nombre}+'/'+${user.getRol()}"></h4>
+                        <a class="card-text"  th:href="@{verProyectos (username = ${user.getUsername()})}">Ver proyectos</a>
                         <div class="btn-toolbar" role="toolbar">
                             <div class="btn-group me-2" role="group">
-                                <a th:href="@{modUser(id = ${user.id})}" class="btn btn-primary" th:text="#{proyecto1}">Administrar</a>
+                                <a th:href="@{modUser(id = ${user.getUsername()})}" class="btn btn-primary" th:text="#{proyecto1}">Administrar</a>
                             </div>
                             <div class="btn-group me-2" role="group">
-                                <a th:href="@{eliminarUser(id = ${user.id})}" class="btn btn-danger" th:text="#{eliminar}">Eliminar</a>
+                                <a th:href="@{eliminarUser(id = ${user.getUsername()})}" class="btn btn-danger" th:text="#{eliminar}">Eliminar</a>
                             </div>
                         </div>
                     </div>
