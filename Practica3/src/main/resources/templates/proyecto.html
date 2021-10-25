@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <title>Mock - Proyectos</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" >
+    <div class="container-fluid" style="margin-left: 8%">
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand" th:text="MockeClone" th:href="@{/Mock/}">MockeClone</a>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <div style="display: flex;justify-content: flex-end; ">
+                <ul class="navbar-nav mb-2 mb-lg-0  ">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:text="#{header1}" th:href="@{proyectos}">Proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:text="#{header2}" th:href="@{usuarios}">Usuarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:text="#{header3}" th:href="@{login}">Iniciar Sesion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div  style="width: 80%">
+        <div class="card-body" style="width: 80%; margin-left: 9%">
+            <a class="btn btn-primary" th:href="@{addEndpoint}">+ Endpoint</a>
+        </div>
+        <th:block th:each = "endpoint : ${endpoints}">
+            <div class="mx-auto" style="width: 80%">
+                <div class="card ">
+                    <div class="card-body pl-6 pr-6">
+                        <h4 class="card-title" th:text= "${endpoint.nombre} +'/'+ ${endpoint.getMetodo()}"></h4>
+                        <a class="card-text" th:text="${endpoint.ruta}" th:href="@{accederEndpoint (id = ${endpoint.id})}"></a>
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group me-2" role="group">
+                                <a th:href="@{verEndpoint(id = ${endpoint.id})}" class="btn btn-primary" th:text="#{ver}">Ver</a>
+                            </div>
+                            <div class="btn-group me-2" role="group">
+                                <a th:href="@{eliminarEndpoint(id = ${endpoint.id})}" class="btn btn-danger" th:text="#{eliminar}">Eliminar</a>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</div >
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <title>Mock - Proyectos</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" >
+  <div class="container-fluid" style="margin-left: 8%">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <a class="navbar-brand" th:text="MockeClone" th:href="@{/Mock/}">MockeClone</a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <div style="display: flex;justify-content: flex-end; ">
+        <ul class="navbar-nav mb-2 mb-lg-0  ">
+          <li class="nav-item">
+            <a class="nav-link active" th:text="#{header1}" th:href="@{proyectos}">Proyectos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:text="#{header2}" th:href="@{usuarios}">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" th:text="#{header3}" th:href="@{login}">Iniciar Sesion</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid ">
+  <div  style="width: 80%">
+    <div class="card-body" style="width: 80%; margin-left: 9%">
+      <form method="post" th:action="${action}">
+
+        <div class="mb-3">
+          <label for="nombre" class="form-label" th:text="#{form1}">Nombre</label>
+          <input type="text" class="form-control" id="nombre" name="nombre" th:value ="${endpoint != null} ? ${endpoint.nombre} : ''" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="descripcion" class="form-label" th:text="#{form2}">Descripcion</label>
+          <input type="text" class="form-control" id="descripcion" name="descripcion" th:value ="${endpoint != null} ? ${endpoint.descripcion} : ''" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="verbo" class="form-label" th:text="#{form3}">Verbo</label>
+          <select class="form-select" id="verbo" name="verbo" required >
+            <option value="GET">Get</option>
+            <option value="POST">Post</option>
+            <option value="PUT">Put</option>
+            <option value="PATCH">Patch</option>
+            <option value="DELETE">Delete</option>
+            <option value="OPTIONS">Options</option>
+            <option th:text="${endpoint != null} ? ${endpoint.getRuta()} : ''" th:value=" ${endpoint != null} ? ${endpoint.getMetodo()} : ''" selected></option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="path" class="form-label" th:text="#{form4}">Path</label>
+          <input type="text" class="form-control" id="path" name="path" th:value ="${endpoint != null} ? ${endpoint.getRuta()} : ''" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="status" class="form-label" th:text="#{form5}" data-live-search="true">Estatus de Respuesta</label>
+          <input list="encodings"  class="col-sm-12 form-control" id="status" name="status" required>
+          <datalist id="encodings">
+            <option th:text="${endpoint != null} ? ${endpoint.getCodigo()} : ''" selected th:value="${endpoint != null} ? ${endpoint.getCodigo()} : ''"></option>
+
+            <option value="100">Continue</option>
+            <option value="101">Switching Protocols</option>
+            <option value="102">Processing</option>
+            <option value="103">Checkpoint</option>
+
+            <option value="200">OK</option>
+            <option value="201">Created</option>
+            <option value="202">Accepted</option>
+            <option value="203">Non-Authoritative Information</option>
+            <option value="204">No Content</option>
+            <option value="205">Reset Content</option>
+            <option value="206">Partial Content</option>
+            <option value="207">Multi-Status</option>
+            <option value="208">Already Reported</option>
+
+            <option value="300">Multiple Choices</option>
+            <option value="301">Moved Permanently</option>
+            <option value="302">Found</option>
+            <option value="303">See Other</option>
+            <option value="304">Not Modified</option>
+            <option value="305">Use Proxy</option>
+            <option value="306">Switch Proxy</option>
+            <option value="307">Temporary Redirec</option>
+            <option value="308">Permanent Redirect</option>
+
+            <option value="400">Bad Request</option>
+            <option value="401">Unauthorized</option>
+            <option value="402">Payment Required</option>
+            <option value="403">Forbidden</option>
+            <option value="404">Not Found</option>
+            <option value="405">Not Allowed</option>
+            <option value="406">Not Acceptable</option>
+            <option value="407">Proxy Authentication Required</option>
+            <option value="408">Request Timeout</option>
+            <option value="409">Conflict</option>
+            <option value="410">Gone</option>
+            <option value="411">Length Required</option>
+            <option value="412">Precondition Failed</option>
+            <option value="413">Request Entity Too Large</option>
+            <option value="414">Request-URI Too Long</option>
+            <option value="415">Unsupported Media Type</option>
+            <option value="416">Requested Range Not Satisfiable</option>
+            <option value="417">Expectation Failed</option>
+            <option value="418">I'm a teapot</option>
+            <option value="422">Unprocessable Entity </option>
+            <option value="423">Locked</option>
+            <option value="424">Failed Dependency</option>
+            <option value="425">Unassigned</option>
+            <option value="426">Upgrade Required</option>
+            <option value="428">Precondition Required</option>
+            <option value="429">Too Many Requests</option>
+            <option value="431">Request Header Fields Too Large</option>
+            <option value="451">Unavailable for Legal Reasons</option>
+
+            <option value="500">Internal Server Error</option>
+            <option value="501">Not Implemented</option>
+            <option value="502">Bad Gateway</option>
+            <option value="503">Service Unavailable</option>
+            <option value="504">Gateway Timeout</option>
+            <option value="505">HTTP Version Not Supported</option>
+            <option value="506">Variant Also Negotiates</option>
+            <option value="507">Insufficient Storage</option>
+            <option value="508">Loop Detected</option>
+            <option value="509">Bandwidth Limit Exceeded</option>
+            <option value="510">Not Extended</option>
+            <option value="511">Network Authentication Required</option>
+            <option value="512">Not updated</option>
+            <option value="521">Version Mismatch</option>
+          </datalist>
+        </div>
+
+        <div class="mb-3">
+          <label for="type" class="form-label" th:text="Content-Type" data-live-search="true"Content-Type ></label>
+          <select list="content"  class="col-sm-12 form-control" id="type" name="type" required>
+          <datalist id="content">
+            <option value="application/json">application/json</option>
+            <option value="application/xhtml+xml">application/xhtml+xml</option>
+            <option value="application/xml">application/xml</option>
+            <option value="text/csv">text/csv</option>
+            <option value="text/css">ext/css</option>
+            <option value="text/html">text/html</option>
+            <option value="text/plain">text/plain</option>
+            <option value="text/xml">text/xml</option>
+          </datalist>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="header" class="form-label" th:text="Headers" data-live-search="true">Headers</label>
+          <textarea class="form-control" id="header" name="header" th:text="${endpoint != null} ? ${endpoint.headers} : ''" required>
+          </textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="body" class="form-label" th:text="#{form6}" data-live-search="true">Cuerpo</label>
+          <textarea class="form-control" id="body" name="body" th:text ="${endpoint != null} ? ${endpoint.getCuerpo()} : ''" required>
+          </textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="exp" class="form-label" th:text="#{form7}" data-live-search="true"Content-Type>Tiempo de expiracion</label>
+          <select list="ex"  class="col-sm-12 form-control" id="exp" name="exp" required>
+            <datalist id="ex">
+              <option value="1">1 hora</option>
+              <option value="24">1 dia</option>
+              <option value="168">1 semana</option>
+              <option value="730">1 mes</option>
+              <option value="8760" selected>1 año</option>
+            </datalist>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="time" class="form-label" th:text="#{form8}">Tiempo de Demora (valor en segundos)</label>
+          <input type="number" class="form-control" id="time" name="time" th:value ="${endpoint != null} ? ${endpoint.getTiempoRespuesta()} : ''" required min="0">
+        </div>
+
+        <div class="mb-3">
+          <label for="jwt" class="form-label" th:text="#{form9}">Habilitar JWT</label>
+          <input type="checkbox" class="form-check-input" id="jwt" name="jwt">
+        </div>
+
+        <div class="btn-toolbar" role="toolbar">
+          <div class="btn-group me-2" role="group">
+            <button type="submit"  class="btn btn-primary" th:text="#{aceptar}">Aceptar</button>
+          </div>
+          <div class="btn-group me-2" role="group">
+            <a th:href="@{/Mock/}" class="btn btn-danger" th:text="#{cancelar}">Cancelar</a>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div >
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>

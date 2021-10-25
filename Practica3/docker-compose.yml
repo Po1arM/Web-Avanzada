@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  app-web:      
+    build: .
+    ports:          
+      - ${PUERTO_APP}:8080
+
+    env_file:
+      - .env
+
+    environment:    
+      - NOMBRE_APP=$AMBIENTE
+    
+    depends_on:   
+      - base-datos
+
+  base-datos:
+    image: mysql:5.7.26
+    
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_USER=root
+      - MYSQL_DATABASE=$DB_NAME
+    volumes:   
+      - ~/data_mysql:/var/lib/mysql
+    
+
+  phpmyadmin: 
+    image: phpmyadmin:5.1.1
+    env_file:
+      - .env
+    ports:
+      - ${PUERTO_PHPADMIN}:8082
+    environment:
+      - PMA_ARBITRARY=1
+      
+    
+    depends_on: 
+      - base-datos
