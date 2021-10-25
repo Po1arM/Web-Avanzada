@@ -5,9 +5,11 @@ RUN gradle bootJar --no-daemon
 
 FROM openjdk:11.0.12-jre-slim-buster
 
-ENV spring.datasource.username='root'
-ENV spring.datasource.password='12345678'
-ENV DB_NAME = REST_Mock
+ENV spring.datasource.username=root
+ENV spring.datasource.password=12345678
+ENV DB_NAME=REST_Mock
+ENV DB_HOST=base-datos
+ENV PUERTO_APP=8080
 
 EXPOSE 8080
 RUN mkdir /app
