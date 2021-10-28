@@ -3,28 +3,32 @@ services:
   app-web:      
     build: .
     ports:          
-      - ${PUERTO_APP}:8080
+      - 8080:8080
 
     env_file:
       - .env
 
     environment:    
-      - NOMBRE_APP=$AMBIENTE
+      - NOMBRE_APP=Prueba
     
     depends_on:   
       - base-datos
+    networks:
+          - red-app
 
   base-datos:
     image: mysql:5.7.26
-    
+  
     env_file:
       - .env
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
-      - MYSQL_USER=root
-      - MYSQL_DATABASE=$DB_NAME
+      - MYSQL_USER=ADMIN
+      - MYSQL_DATABASE=REST_Mock
     volumes:   
       - ~/data_mysql:/var/lib/mysql
+    networks:
+      - red-app
     
 
   phpmyadmin: 
@@ -32,10 +36,15 @@ services:
     env_file:
       - .env
     ports:
-      - ${PUERTO_PHPADMIN}:8082
+      - 8082:8082
     environment:
       - PMA_ARBITRARY=1
-      
+      - ServerName = Server
+    networks:
+      - red-app
     
     depends_on: 
       - base-datos
+
+networks:  
+  red-app:   
