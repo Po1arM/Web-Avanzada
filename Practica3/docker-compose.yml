@@ -29,6 +29,7 @@ services:
       - ~/data_mysql:/var/lib/mysql
     networks:
       - red-app
+
     
 
   phpmyadmin: 

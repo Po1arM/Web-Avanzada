@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
+
+}
+
+group 'org.example'
+version 'Cliente'
+
+repositories {
+    mavenCentral()
+}
+mainClassName = "Main"
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation group: 'org.apache.activemq', name: 'activemq-all', version: '5.4.2'
+    implementation 'com.google.code.gson:gson:2.8.7'
+}
+test {
+    useJUnitPlatform()
+}
+shadowJar {
+    baseName = 'prueba-jms'
+    classifier = null
+    version = null
+}
