@@ -24,8 +24,8 @@ public class Main {
             TextMessage message;
             while (true) {
                 aux = modificarMensaje(aux);
-                //message = session.createTextMessage(gson.toJson(aux));
-                message = session.createTextMessage("Hola mundo");
+                message = session.createTextMessage(gson.toJson(aux));
+                //message = session.createTextMessage("Hola mundo");
                 //System.out.println(gson.toJson(aux));
                 messageProducer.send(message);
                 Thread.sleep(60000);
