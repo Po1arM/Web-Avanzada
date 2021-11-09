@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  app-web:      
+    build: Servidor-Broker/ .
+    ports:          
+      - 8080:8080
+
+    environment:    
+      - NOMBRE_APP=Prueba
+    
+    depends_on:   
+      - base-datos
+    networks:
+          - red-app
+
+  base-datos:
+    image: mysql:5.7.26
+  
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_USER=db
+      - MYSQL_DATABASE=Notificacion_sensores
+    volumes:   
+      - ~/data_mysql:/var/lib/mysql
+    networks:
+      - red-app
+
+
+networks:  
+  red-app:   
