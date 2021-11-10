@@ -30,7 +30,7 @@ dependencies {
     //Administrador de plantillas
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    runtimeOnly 'mysql:mysql-connector-java'
+    //runtimeOnly 'mysql:mysql-connector-java'
 
     //Seguridad
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -50,6 +50,9 @@ dependencies {
 
     //Cola de mensajeria
     implementation group: 'org.apache.activemq', name: 'activemq-all', version: '5.4.2'
+
+    //Base de datos de prueba
+    runtimeOnly 'com.h2database:h2'
 
     implementation 'com.google.code.gson:gson:2.8.7'
 
