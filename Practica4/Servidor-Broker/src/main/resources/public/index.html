@@ -44,47 +44,67 @@
     </script>-->
 
     <script>
-        var arr = [];
+        var arrTemperatura = [];
         var arrHumedad = [];
-        var map = new Map();
-        var mapHumedad = new Map();
-        loadArr(1);
-        drawChart('chart1a',arr);
-        drawChart('chart1b', arrHumedad);
-        loadArr(2);
-        drawChart('chart2a', arr);
-        drawChart('chart2b', arrHumedad);
 
         const evtSource = new EventSource("/sse");
         evtSource.addEventListener("update", function(e) { //.onMessage
             var obj = JSON.parse(e.data);
-            //console.log('he recibido: '+e.data);
-            //loadArr();
-
-            //updateChar();
-            //drawChart();
+            console.log(obj);
+            loadGraphData(obj);
+            drawChart('chart1',arrTemperatura);
+            drawChart('chart2',arrHumedad);
         }, false);
 
-        function loadArr(id){
-            $(document).ready(function(){
-                $.ajax({
-                    type:'GET',
-                    url:'/getAllMensajes?id='+id,
-                    dataType: 'json',
-                    "async": false,
-                    success: function(data){
-                        $.each(data, function(i, item){
-                            map.set(item.fechaGeneracion,item.temperatura);
-                            mapHumedad.set(item.fechaGeneracion,item.humedad);
-                        });
+        function loadGraphData(payload){
+            let data = JSON.parse(payload);
 
-                        //convierte map en array.
-                        arr = Array.from(map, ([name, value]) => ([name, value])); //este array es el que se carga a la tabla
-                        arrHumedad = Array.from(mapHumedad, ([name, value]) => ([name, value])); //este array es el que se carga a la tabla
-                    }
-                });
+            //Date entendible para js
+            data.forEach((item, index, arr) => {
+                var temp = arr[index].fechaGeneracion;
+                arr[index].fechaGeneracion = new Date(temp);
             });
+
+            if (data != [] && data != null) {
+                var lista = [];
+                for (let i = 0; i < data.length;) {
+                    let subLista = [];
+                    for(let j=0; j<2; j++){
+                        if(j==0){
+                            subLista.push(data[i].fechaGeneracion);
+                        }
+                        subLista.push(data[i].temperatura);
+                        i++;
+                    }
+                    lista.push(subLista);
+                }
+                arrTemperatura = lista;
+
+                lista = [];
+                for (let i = 0; i < data.length;) {
+                    let subLista = [];
+                    for(let j=0; j<2; j++){
+                        if(j==0){
+                            subLista.push(data[i].fechaGeneracion);
+                        }
+                        subLista.push(data[i].humedad);
+                        i++;
+                    }
+                    lista.push(subLista);
+                }
+                arrHumedad = lista;
+            }
+
         }
+
+        $(document).ready(function(){
+            var jsonBom = $('#jsonBom').val();
+            payload = parseJSON(jsonBom.val());
+            console.log(payload);
+            loadGraphData(payload);
+            drawChart('chart1',arrTemperatura);
+            drawChart('chart2',arrHumedad);
+        });
     </script>
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -92,22 +112,24 @@
     <script type="text/javascript">
         var data;
         google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        //google.charts.setOnLoadCallback(drawChart);
 
         function drawChart(elementId, dataArray) {
             // Create the data table.
             data = new google.visualization.DataTable();
-            data.addColumn('string', 'Fecha');
-            data.addColumn('number', 'Valor'); //Temperatura, humedad
+            data.addColumn('date', 'Fecha');
+            data.addColumn('number', 'Sensor 1');
+            data.addColumn('number', 'Sensor 2');
             data.addRows(dataArray);
 
             // Set chart options
             var options = {
                 'title':'Temperatura',
                 'width':400,
-                'height':300};
+                'height':300,
+                min:0, displayAnnotations: true
+            };
 
-            // Instantiate and draw our chart, passing in some options.
             var chart = new google.visualization.LineChart(document.getElementById(elementId));
             chart.draw(data, options);
         }
@@ -115,17 +137,16 @@
 </head>
 <body>
 
+<input type="hidden" id="jsonBom" value='${jsonBom}'/>
+
 <h1>Visualizacion de sensores</h1>
 <br/>
 
 <p>Sensor 1</p>
-<div id="chart1a" style="width: 800px; height: 400px;"></div>
-<div id="chart1b" style="width: 800px; height: 400px;"></div>
-
+<div id="chart1" style="width: 800px; height: 400px;"></div>
 <br/>
 <p>Sensor 2</p>
-<div id="chart2a" style="width: 800px; height: 400px;"></div>
-<div id="chart2b" style="width: 800px; height: 400px;"></div>
+<div id="chart2" style="width: 800px; height: 400px;"></div>
 
 </body>
 </html>
