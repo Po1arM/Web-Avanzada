@@ -32,9 +32,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //runtimeOnly 'mysql:mysql-connector-java'
 
-    //Seguridad
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
 
     //Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -46,7 +44,6 @@ dependencies {
 
     //Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
 
     //Cola de mensajeria
     implementation group: 'org.apache.activemq', name: 'activemq-all', version: '5.4.2'

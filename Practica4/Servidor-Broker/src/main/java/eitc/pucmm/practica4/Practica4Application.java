@@ -10,7 +10,9 @@ public class Practica4Application {
     public static void main(String[] args) throws Exception {
         ApplicationContext applicationContext = SpringApplication.run(Practica4Application.class, args);
         Main.main(args);
-        new ServidorService().start();
+        MensajeRepository mensajeRepository = (MensajeRepository) applicationContext.getBean("mensajeRepository");
+        ServidorService servidorService = new ServidorService(mensajeRepository);
+        servidorService.start();
     }
 
 }

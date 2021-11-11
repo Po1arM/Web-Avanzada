@@ -13,7 +13,7 @@ public class Main {
             Mensaje aux = new Mensaje(fechaGeneracion.toString(),Integer.parseInt(args[0]),temperatura,humedad);
             Gson gson = new Gson();
 
-            ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://Servidor-Broker:61616");
+            ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             Connection connection = factory.createConnection("admin","admin");
             connection.start();
 
