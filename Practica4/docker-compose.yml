@@ -1,7 +1,9 @@
 version: '3.8'
 services:
-  app-web:      
-    build: Servidor-Broker/ .
+  app-web:   
+    build:   
+      context: Servidor-Broker/
+      dockerfile: Dockerfile
     ports:          
       - 8080:8080
 
@@ -9,7 +11,7 @@ services:
       - NOMBRE_APP=Prueba
     
     depends_on:   
-      - base-datos
+      - "base-datos"
     networks:
           - red-app
 
@@ -25,6 +27,29 @@ services:
     networks:
       - red-app
 
+  sensor1:
+    build:
+      context: Cliente/
+      dockerfile: Dockerfile
+    
+    depends_on:
+      - "app-web"
+    networks:
+      - red-app
+    command: bash -c "cd /app && java -jar Cliente.jar 1"
+
+  sensor2:
+    build:
+      context: Cliente/
+      dockerfile: Dockerfile
+    
+    depends_on:
+      - "app-web"
+    networks:
+      - red-app
+    command: bash -c "apt-get update && apt-get install -y wget"
+    command: bash -c"wget -qO- https://raw.githubusercontent.com/eficode/wait-for/v2.1.3/wait-for | sh -s -- app-web:3306 -- echo success"
+    command: bash -c "cd /app && java -jar Cliente.jar 2"
 
 networks:  
   red-app:   
