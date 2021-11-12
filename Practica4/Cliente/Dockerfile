@@ -7,5 +7,3 @@ FROM openjdk:11.0.12-jre-slim-buster
 
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/Cliente.jar
-ARG ID
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/praCliente.jar", ${ID}]

@@ -13,7 +13,7 @@ public class Main {
             Mensaje aux = new Mensaje(fechaGeneracion.toString(),Integer.parseInt(args[0]),temperatura,humedad);
             Gson gson = new Gson();
 
-            ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory("tcp://app-web:61616");
             Connection connection = factory.createConnection("admin","admin");
             connection.start();
 
@@ -37,7 +37,7 @@ public class Main {
         float temperatura = mensaje.getTemperatura();
         mensaje.setHumedad((float) Math.random()*(humedad+5)+(humedad-5));
         mensaje.setTemperatura((float) Math.random()*(temperatura+5)+(temperatura-5));
-
+        mensaje.setFechaGeneracion(new Date().toString());
         return mensaje;
     }
 }
