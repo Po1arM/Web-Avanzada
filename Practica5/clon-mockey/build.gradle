@@ -40,6 +40,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    //Hazelcast para sesiones con balanceo
+    implementation 'org.springframework.session:spring-session-hazelcast' //módulo para trabajar con Hazelcast.
+    implementation 'org.springframework.session:spring-session-core'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
     //Trabajando con los webjars. ver http://www.webjars.org/
     implementation 'org.webjars:bootstrap:3.3.7-1'
     implementation 'org.webjars:jquery:3.1.0'

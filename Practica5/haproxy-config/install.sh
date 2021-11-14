@@ -1,12 +1,10 @@
 #Instalar snap
-sudo apt update
-sudo apt install snapd -y
+apt update
+apt install snapd -y
 
 #Instalar Certbot
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-
-echo -ne '\n'
+snap install --classic certbot
+ln -s /snap/bin/certbot /usr/bin/certbot
 
 #Ejecutar certbot para obtener credenciales
 sudo certbot certonly --standalone -d <URI>  -m <Correo>

@@ -1,8 +1,10 @@
-version: "3.8"
-  services:
+version: "3.4"
+services:
+
     base-datos:
       image: mysql:5.7.26
-
+      ports:
+        - 33006:33006
       environment:
         - MYSQL_ROOT_PASSWORD=12345678
         - MYSQL_USER=db
@@ -17,7 +19,7 @@ version: "3.8"
         context: clon-mockey/
         dockerfile: Dockerfile
       
-      evironment:
+      environment:
         - PUERTO_APP=8080
  
       networks:
@@ -30,7 +32,7 @@ version: "3.8"
         context: clon-mockey/
         dockerfile: Dockerfile
       
-      evironment:
+      environment:
         - PUERTO_APP=8081
  
       networks:
@@ -43,7 +45,7 @@ version: "3.8"
         context: clon-mockey/
         dockerfile: Dockerfile
       
-      evironment:
+      environment:
         - PUERTO_APP=8082
  
       networks:
@@ -53,13 +55,16 @@ version: "3.8"
 
     sevidor-haproxy:
       build:
-        context: haproxy-config:
-          dockerfile: Dockerfile
-        
-        networks:
-          - red-app
-        depends_on:
-          - app1
-          - app2
-          - app3
+        context: haproxy-config/
+        dockerfile: Dockerfile
+      ports:
+        - 8080:8080 
+      networks:
+        - red-app
+      depends_on:
+        - app1
+        - app2
+        - app3
+networks:
+  red-app:
 

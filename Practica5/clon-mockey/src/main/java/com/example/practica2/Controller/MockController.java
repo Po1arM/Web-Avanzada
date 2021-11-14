@@ -1,6 +1,5 @@
 package com.example.practica2.Controller;
 
-import com.ctc.wstx.util.SymbolTable;
 import com.example.practica2.entidades.EnumMetodo;
 import com.example.practica2.entidades.Mock;
 import com.example.practica2.entidades.Proyecto;
@@ -10,18 +9,25 @@ import com.example.practica2.repositorio.seguridad.MockRepository;
 import com.example.practica2.repositorio.seguridad.ProyectoRepository;
 import com.example.practica2.servicios.MockServices;
 
-import com.example.practica2.servicios.ProyectoServices;
 import com.example.practica2.servicios.UsuarioServices;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.hazelcast.config.Config;
+
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
+import org.springframework.session.hazelcast.PrincipalNameExtractor;
+import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,9 +36,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+
 import java.util.*;
 
 @Controller
+@EnableHazelcastHttpSession
 public class MockController {
     @Autowired
     private MessageSource messageSource;
@@ -258,6 +267,23 @@ public class MockController {
         return httpHeaders;
 
     }
+/*
+    @Bean
+        public HazelcastInstance hazelcastInstance() {
+            //Configuración basica.
+            MapAttributeConfig attributeConfig = new MapAttributeConfig()
+                    .setName(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
+                    .setExtractor(PrincipalNameExtractor.class.getName());
 
+            Config config = new Config();
+
+            config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
+                    .addMapAttributeConfig(attributeConfig)
+                    .addMapIndexConfig(new MapIndexConfig(
+                            HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
+
+            return Hazelcast.newHazelcastInstance(config);
+        }
+*/
 
 }
