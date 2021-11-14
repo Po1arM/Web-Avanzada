@@ -1,0 +1,65 @@
+version: "3.8"
+  services:
+    base-datos:
+      image: mysql:5.7.26
+
+      environment:
+        - MYSQL_ROOT_PASSWORD=12345678
+        - MYSQL_USER=db
+        - MYSQL_DATABASE=Notificacion_sensores
+      volumes:
+        - ~/data_mysql:/var/lib/mysql
+      networks:
+        - red-app
+    
+    app1:
+      build:
+        context: clon-mockey/
+        dockerfile: Dockerfile
+      
+      evironment:
+        - PUERTO_APP=8080
+ 
+      networks:
+        - red-app
+      depends_on:
+        - base-datos
+
+    app2:
+      build:
+        context: clon-mockey/
+        dockerfile: Dockerfile
+      
+      evironment:
+        - PUERTO_APP=8081
+ 
+      networks:
+        - red-app
+      depends_on:
+        - base-datos
+    
+    app3:
+      build:
+        context: clon-mockey/
+        dockerfile: Dockerfile
+      
+      evironment:
+        - PUERTO_APP=8082
+ 
+      networks:
+        - red-app
+      depends_on:
+        - base-datos
+
+    sevidor-haproxy:
+      build:
+        context: haproxy-config:
+          dockerfile: Dockerfile
+        
+        networks:
+          - red-app
+        depends_on:
+          - app1
+          - app2
+          - app3
+
