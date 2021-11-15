@@ -13,7 +13,6 @@ import org.springframework.session.hazelcast.PrincipalNameExtractor;
 import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
 
 @SpringBootApplication
-@EnableHazelcastHttpSession
 public class Practica2Application {
 
     public static void main(String[] args) {
