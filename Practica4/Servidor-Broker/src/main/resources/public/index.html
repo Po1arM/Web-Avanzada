@@ -1,152 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ejemplo Cliente de WebSocket</title>
-    <script src="jquery-3.2.1.min.js"></script>
-    <!--<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>-->
+    <head>
+        <meta charset="UTF-8">
+        <title>Ejemplo Cliente de WebSocket</title>
+        <script src="/webjars/jquery/jquery.min.js"></script>
+        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-    <!--<script>
-        //abriendo el objeto para el websocket
-        var webSocket;
-        var tiempoReconectar = 5000;
+        <script type="text/javascript">
+            var stompClient = null
 
-
-        $(document).ready(function(){
-            conectar();
-
-            $("#boton").click(function(){
-                webSocket.send($("#mensajeCliente").val());
-            });
-        });
-
-        function recibirInformacionServidor(mensaje){
-            console.log(mensaje);
-            console.log("Recibiendo del servidor: "+mensaje.data)
-            $("#mensajeServidor").append(mensaje.data);
-        }
-        
-        function conectar() {
-            webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/mensajeServidor");
-            //indicando los eventos:
-            webSocket.onmessage = function(data){recibirInformacionServidor(data);};
-            webSocket.onopen  = function(e){ console.log("Conectado - status "+this.readyState); };
-            webSocket.onclose = function(e){console.log("Desconectado - status "+this.readyState);};
-        }
-
-        function verificarConexion(){
-            if(!webSocket || webSocket.readyState == 3){
-              conectar();
+            function connect() {
+                var socket = new SockJS('/ws-socket')
+                stompClient = Stomp.over(socket)
+                stompClient.connect({}, function (frame) {
+                    console.log('Conectado: ' + frame)
+                    stompClient.subscribe('/topic/grafico', function (string) {
+                        console.log('Llego miop')
+                        console.log(JSON.parse(string.body))
+                        //generarGrafico(jSON.parse(jsonObject.body).content)
+                    })
+                })
             }
-        }
-
-        setInterval(verificarConexion, tiempoReconectar); //para reconectar.
-    </script>-->
-
-    <script>
-        var arrTemperatura = [];
-        var arrHumedad = [];
-
-        const evtSource = new EventSource("/sse");
-        evtSource.addEventListener("update", function(e) { //.onMessage
-            var obj = JSON.parse(e.data);
-            console.log(obj);
-            loadGraphData(obj);
-            drawChart('chart1',arrTemperatura);
-            drawChart('chart2',arrHumedad);
-        }, false);
-
-        function loadGraphData(payload){
-            let data = JSON.parse(payload);
-
-            //Date entendible para js
-            data.forEach((item, index, arr) => {
-                var temp = arr[index].fechaGeneracion;
-                arr[index].fechaGeneracion = new Date(temp);
-            });
-
-            if (data != [] && data != null) {
-                var lista = [];
-                for (let i = 0; i < data.length;) {
-                    let subLista = [];
-                    for(let j=0; j<2; j++){
-                        if(j==0){
-                            subLista.push(data[i].fechaGeneracion);
-                        }
-                        subLista.push(data[i].temperatura);
-                        i++;
-                    }
-                    lista.push(subLista);
-                }
-                arrTemperatura = lista;
-
-                lista = [];
-                for (let i = 0; i < data.length;) {
-                    let subLista = [];
-                    for(let j=0; j<2; j++){
-                        if(j==0){
-                            subLista.push(data[i].fechaGeneracion);
-                        }
-                        subLista.push(data[i].humedad);
-                        i++;
-                    }
-                    lista.push(subLista);
-                }
-                arrHumedad = lista;
+            function sendSomething() {
+                stompClient.send("/app/ws", {}, JSON.stringify('Coñazo, manda algo'));
             }
 
-        }
+            function generarGrafico(datos){
 
-        $(document).ready(function(){
-            var jsonBom = $('#jsonBom').val();
-            payload = parseJSON(jsonBom.val());
-            console.log(payload);
-            loadGraphData(payload);
-            drawChart('chart1',arrTemperatura);
-            drawChart('chart2',arrHumedad);
-        });
-    </script>
+            }
 
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <!--draw chart-->
-    <script type="text/javascript">
-        var data;
-        google.charts.load('current', {'packages':['corechart']});
-        //google.charts.setOnLoadCallback(drawChart);
+        </script>
+    </head>
 
-        function drawChart(elementId, dataArray) {
-            // Create the data table.
-            data = new google.visualization.DataTable();
-            data.addColumn('date', 'Fecha');
-            data.addColumn('number', 'Sensor 1');
-            data.addColumn('number', 'Sensor 2');
-            data.addRows(dataArray);
+    <body>
 
-            // Set chart options
-            var options = {
-                'title':'Temperatura',
-                'width':400,
-                'height':300,
-                min:0, displayAnnotations: true
-            };
+    <input type = "button" onclick = "connect()" value = "Conectar">
+    <input type = "button" onclick = "sendSomething()" value = "Enviar">
 
-            var chart = new google.visualization.LineChart(document.getElementById(elementId));
-            chart.draw(data, options);
-        }
-    </script>
-</head>
-<body>
-
-<input type="hidden" id="jsonBom" value='${jsonBom}'/>
-
-<h1>Visualizacion de sensores</h1>
-<br/>
-
-<p>Sensor 1</p>
-<div id="chart1" style="width: 800px; height: 400px;"></div>
-<br/>
-<p>Sensor 2</p>
-<div id="chart2" style="width: 800px; height: 400px;"></div>
-
-</body>
+    </body>
 </html>

@@ -1,26 +1,27 @@
 package eitc.pucmm.practica4;
 
 import com.google.gson.Gson;
+import eitc.pucmm.practica4.Controladores.MessageController;
 import eitc.pucmm.practica4.entidades.Mensaje;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.jms.*;
 import java.util.List;
-import java.util.Map;
 
 
 public class ServidorService {
     private MensajeRepository mensajeRepository;
+    private MessageController messageController;
+
     private ActiveMQConnectionFactory factory;
     private Connection connection;
     private Session session;
     private Topic topic;
     private MessageConsumer messageConsumer;
 
-    public ServidorService(MensajeRepository mensajeRepository) {
+    public ServidorService(MensajeRepository mensajeRepository, MessageController messageController) {
         this.mensajeRepository = mensajeRepository;
+        this.messageController = messageController;
     }
 
     public void start() throws JMSException {
@@ -42,6 +43,7 @@ public class ServidorService {
                 mensajeRepository.save(aux);
                 hola();
                 //Agregar llamada a la funcion que ejecuta el websocket
+                messageController.enviarDatos();
 
             }catch (Exception e){
                 e.printStackTrace();

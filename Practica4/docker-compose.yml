@@ -32,6 +32,24 @@ services:
       - ~/data_mysql:/var/lib/mysql
     networks:
       - red-app
+  
+  sensor1:
+    build:
+      context: Cliente/
+      dockerfile: Dockerfile
+    
+    networks:
+      - red-app
+    command: bash -c "sleep 60 && cd /app && java -jar Cliente.jar 1"
+
+  sensor2:
+    build:
+      context: Cliente/
+      dockerfile: Dockerfile
+
+    networks:
+      - red-app
+    command: bash -c "sleep 60 && cd /app && java -jar Cliente.jar 2"
 
 networks:  
   red-app:   
