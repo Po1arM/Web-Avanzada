@@ -44,12 +44,8 @@ public class ConfiguracionSeguridad extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll();
 
-        //TODO: validar exclusivamente en ambiente de prueba.
-        // deshabilitando las seguridad contra los frame internos.
-        //if(!profiles.matches(Pre"prod")){
-            //Necesario para H2.
-            http.csrf().disable();
-            http.headers().frameOptions().disable();
-        //}
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
+
     }
 }

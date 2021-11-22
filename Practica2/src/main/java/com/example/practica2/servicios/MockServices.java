@@ -37,15 +37,11 @@ public class MockServices {
     @Transactional
     public void eliminar(long id){mockRepository.deleteById(id);}
 
-    //public Mock buscarPorId(long parseLong) {return mockRepository.findById(parseLong).orElse(null);}
 
     public Mock editar(Mock mock){ //incomplete
         System.out.println("do something");
         return new Mock();
     }
-    /*public Mock buscarMockPorID(long parseLong) {
-        return mockRepository.findById(parseLong).orElse(null);
-    }*/
 
     public void actualizarMock(Mock aux) {
         mockRepository.save(aux);
