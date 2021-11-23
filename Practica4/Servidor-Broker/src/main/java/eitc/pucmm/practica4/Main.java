@@ -1,8 +1,6 @@
 package eitc.pucmm.practica4;
 
-import eitc.pucmm.practica4.entidades.Mensaje;
 import org.apache.activemq.broker.BrokerService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class Main {
 

@@ -1,43 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Ejemplo Cliente de WebSocket</title>
-        <script src="/webjars/jquery/jquery.min.js"></script>
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo Cliente de WebSocket</title>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+</head>
 
-        <script type="text/javascript">
-            var stompClient = null
+<body>
+<div class="card p-3">
+    <div class="card-header">
+        <h5 class="card-header">Sensor 1</h5>
+    </div>
+    <div class="card-body">
+        <div id="Sensor1" style="width: 900px; height: 500px"></div>
+    </div>
+</div>
+<div class="card p-3">
+    <div class="card-header">
+        <h5 class="card-header">Sensor 2</h5>
+    </div>
+    <div class="card-body">
+        <div id="Sensor2" style="width: 900px; height: 500px"></div>
+    </div>
 
-            function connect() {
-                var socket = new SockJS('/ws-socket')
-                stompClient = Stomp.over(socket)
-                stompClient.connect({}, function (frame) {
-                    console.log('Conectado: ' + frame)
-                    stompClient.subscribe('/topic/grafico', function (string) {
-                        console.log('Llego miop')
-                        console.log(JSON.parse(string.body))
-                        //generarGrafico(jSON.parse(jsonObject.body).content)
-                    })
-                })
-            }
-            function sendSomething() {
-                stompClient.send("/app/ws", {}, JSON.stringify('Coñazo, manda algo'));
-            }
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var connectionUrl = 'http://localhost:8080/ServerSent'
+    var eventSrc = new EventSource(connectionUrl)
+    console.log('coñazo')
+    eventSrc.addEventListener("Cliente", function (event) {
+        var datos = JSON.parse(event.data)
+        console.log(datos)
+        var {sensor1} = datos
+        var {sensor2} = datos
+        console.log('Probando el serversent de sensor1')
+        console.log(sensor1)
+        drawChart(sensor1, 'Sensor1')
+        drawChart(sensor2, 'Sensor2')
 
-            function generarGrafico(datos){
+    })
 
-            }
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart);
 
-        </script>
-    </head>
+    function drawChart(datos, texto) {
+        console.log('Probando sensor 2')
+        console.log(datos)
+        var template = ['Fecha','Temperatura','Humendad']
+        datos.unshift(template)
+        var data = google.visualization.arrayToDataTable(datos);
 
-    <body>
+        var options = {
+            title: texto + ' - Temperatura y Humendad',
+            legend: { position: 'bottom' }
+        };
 
-    <input type = "button" onclick = "connect()" value = "Conectar">
-    <input type = "button" onclick = "sendSomething()" value = "Enviar">
+        var chart = new google.charts.Line(document.getElementById(texto));
 
-    </body>
+        chart.draw(data, options);
+    }
+</script>
+</body>
 </html>

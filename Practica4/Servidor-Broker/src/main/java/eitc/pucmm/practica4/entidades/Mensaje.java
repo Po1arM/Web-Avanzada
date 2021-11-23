@@ -2,7 +2,6 @@ package eitc.pucmm.practica4.entidades;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import java.io.Serializable;
 
 @Entity

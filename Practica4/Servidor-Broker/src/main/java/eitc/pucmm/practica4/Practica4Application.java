@@ -1,9 +1,9 @@
 package eitc.pucmm.practica4;
 
 import eitc.pucmm.practica4.Controladores.MessageController;
-import org.springframework.context.ApplicationContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class Practica4Application {
@@ -13,7 +13,7 @@ public class Practica4Application {
         Main.main(args);
         MensajeRepository mensajeRepository = (MensajeRepository) applicationContext.getBean("mensajeRepository");
         MessageController messageController = (MessageController) applicationContext.getBean("messageController");
-        ServidorService servidorService = new ServidorService(mensajeRepository,messageController);
+        ServidorService servidorService = new ServidorService(mensajeRepository, messageController);
         servidorService.start();
     }
 

@@ -26,10 +26,10 @@ public class ServidorService {
 
     public void start() throws JMSException {
         System.out.println("\n\n Inicializando Cliente para recibir mensajes\n\n");
-        factory = new ActiveMQConnectionFactory("admin","admin","failover:tcp://localhost:61616");
+        factory = new ActiveMQConnectionFactory("admin", "admin", "failover:tcp://localhost:61616");
         connection = factory.createConnection();
         connection.start();
-        session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
+        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         topic = session.createTopic("notificacion_sensores");
         messageConsumer = session.createConsumer(topic);
@@ -39,21 +39,15 @@ public class ServidorService {
             try {
                 TextMessage textMessage = (TextMessage) message;
                 System.out.println(textMessage.getText());
-                Mensaje aux = gson.fromJson(textMessage.getText(),Mensaje.class);
+                Mensaje aux = gson.fromJson(textMessage.getText(), Mensaje.class);
                 mensajeRepository.save(aux);
-                hola();
                 //Agregar llamada a la funcion que ejecuta el websocket
                 messageController.enviarDatos();
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-    }
-
-    private void hola() {
-        List<Mensaje> mensajes = mensajeRepository.findAll();
-        System.out.println(mensajes.size());
     }
 
 }
