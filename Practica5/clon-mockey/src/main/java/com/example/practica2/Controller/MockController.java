@@ -35,7 +35,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.beans.factory.annotation.Value;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 
 import java.util.*;
@@ -56,15 +58,21 @@ public class MockController {
     private long proyectoID;
 
 
+    @Value("${server.port}")
+    private String puerto;
+
     @RequestMapping("/")
-    public String index(Model model){
+    public String index(Model model, HttpServletResponse response){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username;
+
         if (principal instanceof UserDetails) {
              username = ((UserDetails)principal).getUsername();
         } else {
             username = principal.toString();
         }
+        response.addHeader("server-port",puerto);
+
         model.addAttribute("username",username);
         List<Proyecto> proyectos = proyectoRepository.findAllByUsername(username);
         model.addAttribute("proyects",proyectos);
@@ -72,9 +80,13 @@ public class MockController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String getLoginPage() {
+    public String getLoginPage(HttpServletResponse response) {
+        
+        response.addHeader("server-port", puerto);
+
         return "login";
     }
+    
     @RequestMapping("addProyecto")
     public String addProyecto(Model model, @RequestParam String username,RedirectAttributes redirectAttributes){
         Proyecto proyecto = new Proyecto();
@@ -266,23 +278,5 @@ public class MockController {
         return httpHeaders;
 
     }
-/*
-    @Bean
-        public HazelcastInstance hazelcastInstance() {
-            //Configuración basica.
-            MapAttributeConfig attributeConfig = new MapAttributeConfig()
-                    .setName(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
-                    .setExtractor(PrincipalNameExtractor.class.getName());
-
-            Config config = new Config();
-
-            config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
-                    .addMapAttributeConfig(attributeConfig)
-                    .addMapIndexConfig(new MapIndexConfig(
-                            HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
-
-            return Hazelcast.newHazelcastInstance(config);
-        }
-*/
 
 }

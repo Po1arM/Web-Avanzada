@@ -161,8 +161,10 @@
 
         <div class="mb-3">
           <label for="header" class="form-label" th:text="Headers" data-live-search="true">Headers</label>
-          <textarea class="form-control" id="header" name="header" th:text="${endpoint != null} ? ${endpoint.headers} : ''" required>
+          <textarea class="form-control" id="header" name="header" th:text="${endpoint != null} ? ${endpoint.headers} : ''">
           </textarea>
+          <span th:if="${jsonV != null and jsonV == 'no'}">Conjunto de headers no validos, por favor verificar!</span>
+
         </div>
 
         <div class="mb-3">

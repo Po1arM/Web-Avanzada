@@ -11,8 +11,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 import org.springframework.session.hazelcast.PrincipalNameExtractor;
 import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
+import org.springframework.beans.factory.annotation.Value;
 
 @SpringBootApplication
+@EnableHazelcastHttpSession
 public class Practica2Application {
 
     public static void main(String[] args) {
@@ -23,6 +25,10 @@ public class Practica2Application {
         SeguridadServices seguridadServices = (SeguridadServices) applicationContext.getBean("seguridadServices");
         seguridadServices.crearUsuarioAdmin();
     }
-    
+
+    @Bean
+    public HazelcastInstance hazelcastInstance() {//Configuración basica.
+        return Hazelcast.newHazelcastInstance();
+    }
 
 }

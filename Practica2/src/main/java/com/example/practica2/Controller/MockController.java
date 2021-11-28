@@ -10,15 +10,12 @@ import com.example.practica2.repositorio.seguridad.MockRepository;
 import com.example.practica2.repositorio.seguridad.ProyectoRepository;
 import com.example.practica2.servicios.MockServices;
 
-import com.example.practica2.servicios.ProyectoServices;
 import com.example.practica2.servicios.UsuarioServices;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
@@ -138,14 +133,25 @@ public class MockController {
     }
 
     @RequestMapping("/verEndpoint")
-    public String verEndpoint(Model model, @RequestParam String id){
+    public String verEndpoint(Model model,RedirectAttributes redirectAttributes, @RequestParam String id){
         Mock mock = mockRepository.findById(Long.parseLong(id));
         if(mock != null){
+            if(mock.getJwt()){
+                redirectAttributes.addAttribute("id",mock.getId());
+                return "redirect:/verProyectoJWT";
+            }
             model.addAttribute("endpoint",mock);
             return "endPoint";
         }else{
             return "error";
         }
+    }
+
+    @RequestMapping("/verProyectoJWT")
+    public String jwtEndpoint(Model model, @RequestParam long id){
+        Mock mock = mockRepository.findById(id);
+        model.addAttribute("endpoing",mock);
+        return "endPoint";
     }
 
     @RequestMapping(path = "/verEndpoint", method = RequestMethod.POST)

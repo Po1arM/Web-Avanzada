@@ -40,7 +40,7 @@ services:
       - 8082:8082
     environment:
       - PMA_ARBITRARY=1
-      - ServerName = Server
+      - ServerName=Server
     networks:
       - red-app
     

@@ -12,6 +12,7 @@ import com.example.practica2.servicios.MockServices;
 
 import com.example.practica2.servicios.ProyectoServices;
 import com.example.practica2.servicios.UsuarioServices;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,6 @@ public class MockController {
 
     @Autowired
     private ProyectoRepository proyectoRepository;
-    //Se usa para guardar una referencia de un proyecto
     private long proyectoID;
 
 
@@ -99,9 +99,10 @@ public class MockController {
         return "endPoint";
     }
     @RequestMapping(path = "/addEndpoint", method = RequestMethod.POST)
-    public String crearEndpoint(WebRequest request, RedirectAttributes redirectAttributes){
-        Mock aux = new Mock();
+    public String crearEndpoint(Model model, WebRequest request, RedirectAttributes redirectAttributes){
+        boolean jsonValido = checkJSON(request.getParameter("header"));
 
+        Mock aux = new Mock();
         aux.setRuta(request.getParameter("path"));
         aux.setMetodo(EnumMetodo.valueOf(request.getParameter("verbo")));
         aux.setHeaders(request.getParameter("header"));
@@ -115,13 +116,20 @@ public class MockController {
         aux.setJwt(Boolean.parseBoolean(request.getParameter("jwt")));
         aux.setIdProyecto(proyectoID);
         System.out.println(proyectoID);
-        aux = mockRepository.save(aux);
 
-        Proyecto au1 = proyectoRepository.getById(proyectoID);
-        au1.setEndoPoints(au1.getEndoPoints() + 1);
-        proyectoRepository.save(au1);
-        redirectAttributes.addAttribute("idProyecto", proyectoID);
-        return "redirect:/verProyecto";
+        if(jsonValido){
+            aux = mockRepository.save(aux);
+            Proyecto au1 = proyectoRepository.getById(proyectoID);
+            au1.setEndoPoints(au1.getEndoPoints() + 1);
+            proyectoRepository.save(au1);
+            redirectAttributes.addAttribute("idProyecto", proyectoID);
+            return "redirect:/verProyecto";
+        }else{
+            model.addAttribute("jsonV","no");
+            model.addAttribute("endpoint",aux);
+            return "endPoint";
+        }
+
     }
 
     @RequestMapping("/verEndpoint")
@@ -215,16 +223,6 @@ public class MockController {
         return "addUser";
     }
 
-    /*@RequestMapping(path = "/modUser", method = RequestMethod.POST)
-    public String modUserPost(WebRequest request){
-        String nombre = request.getParameter("nombre");
-        String pass = request.getParameter("pass");
-        String permiso = request.getParameter("permisos");
-
-        Usuario aux = new Usuario(nombre, pass, permiso);
-        //Llamar al servicio para actualizar los usuarios
-        return "redirect:/usuarios";
-    }*/
 
     @RequestMapping("/eliminarUser")
     public String deleteUser(@RequestParam String id){
@@ -257,6 +255,16 @@ public class MockController {
         }
         return httpHeaders;
 
+    }
+
+    private boolean checkJSON(String header) {
+        try {
+            Gson gson = new Gson();
+            gson.fromJson(header, Object.class);
+            return true;
+        } catch(com.google.gson.JsonSyntaxException ex) {
+            return false;
+        }
     }
 
 
