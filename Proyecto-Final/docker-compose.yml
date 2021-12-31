@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+
+  app-web:      
+    build: 
+      context: WebApp/
+      dockerfile: Dockerfile
+    ports:          
+      - 8080:8080
+    environment:    
+      - NOMBRE_APP=Prueba
+    depends_on:   
+      - base-datos
+    networks:
+          - red-app
+
+  user-microservice:
+    build: 
+      context: usuarios-microservice/
+      dockerfile: Dockerfile 
+    ports:          
+      - 8081:8080
+    depends_on:
+      - user-db
+    networks:
+      - red-app
+      - user
+
+      
+  events-microservice:
+    build: 
+      context: eventos-microservice/
+      dockerfile: Dockerfile
+    ports:          
+      - 8082:8080
+    depends_on:
+      - events-db
+    networks:
+      - red-app
+      - events
+    
+  mail-microservice:
+    build: 
+      context: mail-microservice/
+      dockerfile: Dockerfile 
+    ports:          
+      - 8083:8080
+    depends_on:
+      - mail-db
+    networks:
+      - red-app
+      - mail
+    
+  user-db:
+    image: mysql:5.7.26
+  
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_USER=ADMIN
+      - MYSQL_DATABASE=User-DB
+    volumes:   
+      - ~/data_mysql/user:/var/lib/mysql
+    networks:
+      - user
+
+  mail-db:
+    image: mysql:5.7.26
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_USER=ADMIN
+      - MYSQL_DATABASE=Mail-DB
+    volumes:   
+      - ~/data_mysql/mail:/var/lib/mysql
+    networks:
+      - mail
+    
+  events-db:
+    image: mysql:5.7.26
+ 
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345678
+      - MYSQL_USER=ADMIN
+      - MYSQL_DATABASE=Events-DB
+    volumes:   
+      - ~/data_mysql/events:/var/lib/mysql
+    networks:
+      - events
+
+networks:  
+  red-app:
+  user:
+  mail:
+  events:
