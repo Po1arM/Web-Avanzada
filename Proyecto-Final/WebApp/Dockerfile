@@ -4,9 +4,8 @@ WORKDIR /home/gradle/src
 RUN gradle bootJar --no-daemon
 
 FROM openjdk:11.0.12-jre-slim-buster
+EXPOSE 8181
 
-
-EXPOSE 8080
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/WebApp.jar
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom","-jar","/app/WebApp.jar"]

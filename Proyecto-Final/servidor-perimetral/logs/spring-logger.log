@@ -1,0 +1,49 @@
+2022-01-07 03:18:27,430 INFO org.springframework.boot.StartupInfoLogger [main] Starting ServidorPerimetralZuulApplication using Java 11.0.11 on LaPampara with PID 18108 (D:\WorkSpaces\PUCMM\ProgramacionWebAvanzada\Web-Avanzada\Proyecto-Final\servidor-perimetral\build\classes\java\main started by User in D:\WorkSpaces\PUCMM\ProgramacionWebAvanzada\Web-Avanzada\Proyecto-Final\servidor-perimetral)
+2022-01-07 03:18:27,434 DEBUG org.springframework.boot.StartupInfoLogger [main] Running with Spring Boot v2.6.2, Spring v5.3.14
+2022-01-07 03:18:27,435 INFO org.springframework.boot.SpringApplication [main] No active profile set, falling back to default profiles: default
+2022-01-07 03:18:29,242 INFO org.apache.juli.logging.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2022-01-07 03:18:29,244 INFO org.apache.juli.logging.DirectJDKLog [main] Starting service [Tomcat]
+2022-01-07 03:18:29,244 INFO org.apache.juli.logging.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.56]
+2022-01-07 03:18:29,363 INFO org.apache.juli.logging.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2022-01-07 03:18:29,441 WARN com.netflix.config.sources.URLConfigurationSource [main] No URLs will be polled as dynamic configuration sources.
+2022-01-07 03:18:29,442 INFO com.netflix.config.sources.URLConfigurationSource [main] To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2022-01-07 03:18:29,449 INFO com.netflix.config.DynamicPropertyFactory [main] DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@14ed7ddf
+2022-01-07 03:18:31,394 WARN com.netflix.config.sources.URLConfigurationSource [main] No URLs will be polled as dynamic configuration sources.
+2022-01-07 03:18:31,395 INFO com.netflix.config.sources.URLConfigurationSource [main] To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+2022-01-07 03:18:33,944 INFO com.netflix.discovery.DiscoveryClient [main] Initializing Eureka in region us-east-1
+2022-01-07 03:18:33,977 INFO com.netflix.discovery.provider.DiscoveryJerseyProvider [main] Using JSON encoding codec LegacyJacksonJson
+2022-01-07 03:18:33,977 INFO com.netflix.discovery.provider.DiscoveryJerseyProvider [main] Using JSON decoding codec LegacyJacksonJson
+2022-01-07 03:18:34,080 INFO com.netflix.discovery.provider.DiscoveryJerseyProvider [main] Using XML encoding codec XStreamXml
+2022-01-07 03:18:34,081 INFO com.netflix.discovery.provider.DiscoveryJerseyProvider [main] Using XML decoding codec XStreamXml
+2022-01-07 03:18:34,182 INFO com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver [main] Resolving eureka endpoints via configuration
+2022-01-07 03:18:34,195 INFO com.netflix.discovery.DiscoveryClient [main] Disable delta property : false
+2022-01-07 03:18:34,196 INFO com.netflix.discovery.DiscoveryClient [main] Single vip registry refresh property : null
+2022-01-07 03:18:34,196 INFO com.netflix.discovery.DiscoveryClient [main] Force full registry fetch : false
+2022-01-07 03:18:34,196 INFO com.netflix.discovery.DiscoveryClient [main] Application is null : false
+2022-01-07 03:18:34,196 INFO com.netflix.discovery.DiscoveryClient [main] Registered Applications size is zero : true
+2022-01-07 03:18:34,196 INFO com.netflix.discovery.DiscoveryClient [main] Application version is -1: true
+2022-01-07 03:18:34,196 INFO com.netflix.discovery.DiscoveryClient [main] Getting all instance registry info from the eureka server
+2022-01-07 03:18:34,429 INFO com.netflix.discovery.DiscoveryClient [main] The response status is 200
+2022-01-07 03:18:34,431 INFO com.netflix.discovery.DiscoveryClient [main] Starting heartbeat executor: renew interval is: 30
+2022-01-07 03:18:34,434 INFO com.netflix.discovery.InstanceInfoReplicator [main] InstanceInfoReplicator onDemand update allowed rate per min is 4
+2022-01-07 03:18:34,439 INFO com.netflix.discovery.DiscoveryClient [main] Discovery Client initialized at timestamp 1641539914438 with initial instances count: 0
+2022-01-07 03:18:34,441 INFO com.netflix.discovery.DiscoveryClient$3 [main] Saw local status change event StatusChangeEvent [timestamp=1641539914441, current=UP, previous=STARTING]
+2022-01-07 03:18:34,443 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_SERVIDOR-PERIMETRAL/localhost:servidor-perimetral:8080: registering service...
+2022-01-07 03:18:34,446 INFO org.apache.juli.logging.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2022-01-07 03:18:34,514 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_SERVIDOR-PERIMETRAL/localhost:servidor-perimetral:8080 - registration status: 204
+2022-01-07 03:18:36,140 INFO org.springframework.boot.StartupInfoLogger [main] Started ServidorPerimetralZuulApplication in 11.342 seconds (JVM running for 12.336)
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Disable delta property : false
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Single vip registry refresh property : null
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Force full registry fetch : false
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Application is null : false
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Registered Applications size is zero : true
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Application version is -1: false
+2022-01-07 03:19:04,433 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Getting all instance registry info from the eureka server
+2022-01-07 03:19:04,453 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] The response status is 200
+2022-01-07 03:22:47,981 INFO com.netflix.discovery.DiscoveryClient$3 [SpringApplicationShutdownHook] Saw local status change event StatusChangeEvent [timestamp=1641540167981, current=DOWN, previous=UP]
+2022-01-07 03:22:47,982 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_SERVIDOR-PERIMETRAL/localhost:servidor-perimetral:8080: registering service...
+2022-01-07 03:22:47,989 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_SERVIDOR-PERIMETRAL/localhost:servidor-perimetral:8080 - registration status: 204
+2022-01-07 03:22:48,502 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] Shutting down DiscoveryClient ...
+2022-01-07 03:22:51,506 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] Unregistering ...
+2022-01-07 03:22:51,511 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] DiscoveryClient_SERVIDOR-PERIMETRAL/localhost:servidor-perimetral:8080 - deregister  status: 200
+2022-01-07 03:22:51,527 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] Completed shut down of DiscoveryClient

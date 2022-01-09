@@ -1,60 +1,153 @@
 version: '3.8'
 
+networks:  
+  red-app:
+
+
 services:
 
-  app-web:      
-    build: 
-      context: WebApp/
-      dockerfile: Dockerfile
-    ports:          
-      - 8080:8080
-    environment:    
-      - NOMBRE_APP=Prueba
-    depends_on:   
-      - base-datos
-    networks:
-          - red-app
-
-  user-microservice:
-    build: 
-      context: usuarios-microservice/
-      dockerfile: Dockerfile 
-    ports:          
-      - 8081:8080
-    depends_on:
-      - user-db
+  elasticsearch:
+    image: elasticsearch:7.8.1
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      discovery.type: single-node
     networks:
       - red-app
-      - user
+
+  logstash:
+    image: logstash:7.8.1
+    restart: always
+    volumes:
+      - "./archivos-configuracion/logstash/:/usr/share/logstash/pipeline/"
+    ports:
+      - 5044:5044
+    depends_on:
+        - elasticsearch
+    networks:
+      - red-app
+
+  kibana:
+    image: kibana:7.8.1
+    restart: always
+    ports:
+      - 5601:5601
+    networks:
+      - red-app
+    depends_on:
+      - elasticsearch
+      - logstash
+    #  - user-microservice
+
+  servidor-configuracion:
+    build:
+      context: ./servidor-configuracion
+      dockerfile: Dockerfile
+    environment:
+      - EUREKA-SERVER=servidor-eureka
+      - spring_profiles_active=nube
+      - LOGSTASH-SERVER=localhost
+    ports: 
+      - 8888:8888
+    depends_on:
+      - logstash
+    networks:
+      - red-app
+
+  servidor-eureka:
+    build: ./servidor-eureka
+    restart: always
+    environment:
+      - CONFIG-SERVER=servidor-configuracion
+      - LOGSTASH-SERVER=logstash
+    ports: 
+      - 8761:8761
+    depends_on:
+      - servidor-configuracion
+    networks:
+      - red-app
+
+  servidor-perimetral:
+    build: ./servidor-perimetral
+    restart: always
+    environment:
+      - CONFIG-SERVER=servidor-configuracion
+      - EUREKA-SERVER=servidor-eureka
+      - LOGSTASH-SERVER=logstash
+    ports:
+      - 8080:8080
+    networks:
+      - red-app
+    depends_on:
+      - servidor-eureka
+
+  # app-web:      
+  #   build: 
+  #     context: WebApp/
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   ports:          
+  #     - 8181:8181
+  #   environment:    
+  #     - NOMBRE_APP=Prueba
+  #     - CONFIG-SERVER=servidor-configuracion
+  #     - EUREKA-SERVER=servidor-eureka
+  #     - LOGSTASH-SERVER=logstash
+  #   depends_on:   
+  #     - servidor-perimetral
+  #     - user-microservice
+  #     - mail-microservice
+  #   networks:
+  #     - red-app
+
+  # user-microservice:
+  #   build: 
+  #     context: usuarios-microservice/
+  #     dockerfile: Dockerfile 
+  #   restart: always
+  #   environment:
+  #     - CONFIG-SERVER=servidor-configuracion
+  #     - EUREKA-SERVER=servidor-eureka
+  #     - LOGSTASH-SERVER=logstash
+  #   depends_on:
+  #     - user-db
+  #   networks:
+  #     - red-app
 
       
-  events-microservice:
-    build: 
-      context: eventos-microservice/
-      dockerfile: Dockerfile
-    ports:          
-      - 8082:8080
-    depends_on:
-      - events-db
-    networks:
-      - red-app
-      - events
+  # events-microservice:
+  #   build: 
+  #     context: eventos-microservice/
+  #     dockerfile: Dockerfile
+  #   restart: always
+  #   environment:
+  #     - CONFIG-SERVER=servidor-configuracion
+  #     - EUREKA-SERVER=servidor-eureka
+  #     - LOGSTASH-SERVER=logstash  
+  #   depends_on:
+  #     - events-db
+  #   networks:
+  #     - red-app
     
-  mail-microservice:
-    build: 
-      context: mail-microservice/
-      dockerfile: Dockerfile 
-    ports:          
-      - 8083:8080
-    depends_on:
-      - mail-db
-    networks:
-      - red-app
-      - mail
+  # mail-microservice:
+  #   build: 
+  #     context: mail-microservice/
+  #     dockerfile: Dockerfile 
+  #   restart: always
+  #   environment:
+  #     - CONFIG-SERVER=servidor-configuracion
+  #     - EUREKA-SERVER=servidor-eureka
+  #     - LOGSTASH-SERVER=logstash
+  #   depends_on:
+  #     - mail-db
+  #   networks:
+  #     - red-app
     
   user-db:
     image: mysql:5.7.26
-  
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
       - MYSQL_USER=ADMIN
@@ -62,11 +155,11 @@ services:
     volumes:   
       - ~/data_mysql/user:/var/lib/mysql
     networks:
-      - user
+      - red-app
 
   mail-db:
     image: mysql:5.7.26
-
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
       - MYSQL_USER=ADMIN
@@ -74,11 +167,11 @@ services:
     volumes:   
       - ~/data_mysql/mail:/var/lib/mysql
     networks:
-      - mail
+      - red-app
     
   events-db:
     image: mysql:5.7.26
- 
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=12345678
       - MYSQL_USER=ADMIN
@@ -86,10 +179,5 @@ services:
     volumes:   
       - ~/data_mysql/events:/var/lib/mysql
     networks:
-      - events
+      - red-app
 
-networks:  
-  red-app:
-  user:
-  mail:
-  events:

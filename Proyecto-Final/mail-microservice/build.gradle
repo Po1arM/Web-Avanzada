@@ -12,16 +12,35 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+    set('springCloudVersion', "2021.0.0")
+}
+
+
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.2'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.6.2'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.6.2'
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.google.code.gson:gson:2.8.9'
 
 	implementation "org.simplejavamail:simple-java-mail:6.0.5"
-    implementation "com.j2html:j2html:1.4.0"
+    	implementation "com.j2html:j2html:1.4.0"
+
+    	//Librería para centralizar la configuración.
+    	implementation 'org.springframework.cloud:spring-cloud-starter-config:3.1.0'
+    	//Librería para agregar la notificación con Eureka.
+    	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.0'
+	//librería log ELK
+    	implementation 'net.logstash.logback:logstash-logback-encoder:7.0.1'
+	
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 test {
