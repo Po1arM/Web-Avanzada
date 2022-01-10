@@ -26,15 +26,19 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.8.9'
 
 	implementation "org.simplejavamail:simple-java-mail:6.0.5"
-    	implementation "com.j2html:j2html:1.4.0"
 
-    	//Librería para centralizar la configuración.
-    	implementation 'org.springframework.cloud:spring-cloud-starter-config:3.1.0'
-    	//Librería para agregar la notificación con Eureka.
-    	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.0'
+	implementation "com.j2html:j2html:1.4.0"
+
+	implementation 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
+	implementation 'org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE'
+
+	//Librería para centralizar la configuración.
+	implementation 'org.springframework.cloud:spring-cloud-starter-config:3.1.0'
+	//Librería para agregar la notificación con Eureka.
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.0'
 	//librería log ELK
-    	implementation 'net.logstash.logback:logstash-logback-encoder:7.0.1'
-	
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.0.1'
+
 }
 
 dependencyManagement {

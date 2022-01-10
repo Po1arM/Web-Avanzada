@@ -28,31 +28,31 @@
 
             </ul>
             <div class="d-flex">
-                <a aria-current="page" class="btn btn-outline-light m-3" href="#">Log-In</a>
-                <a aria-current="page" class="btn btn-primary m-3" href="#">Registrarse</a>
+                <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/login}">Log-In</a>
+                <a aria-current="page" class="btn btn-primary m-3" th:href="@{~/registro}">Registrarse</a>
             </div>
         </div>
     </div>
 </nav>
 
 <div class="card m-auto " style="width: 20rem;">
-    <form>
+    <form th:action="@{~/login}" method="post">
         <div class="card-body">
             <h5 class="card-title">Inicia Sesion</h5>
             <div class="mb-3">
-                <label class="form-label" for="exampleFormControlInput1">Correo Electronico</label>
-                <input class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" type="email">
+                <label class="form-label" for="email">Correo Electronico</label>
+                <input name ="username" class="form-control" id="email" placeholder="name@example.com" type="text">
             </div>
             <div class="mb-3">
                 <label class="form-label" for="password">Contraseña</label>
-                <input class="form-control" id="password" placeholder="***********" type="password">
+                <input class="form-control" name = "password" id="password" placeholder="" type="password">
             </div>
             <div class="mb-3 text-end">
-                <a class="link" href="#">No tienes una cuenta? Registrate</a>
+                <a class="link" th:href="@{~/registro}">No tienes una cuenta? Registrate</a>
             </div>
             <div class="mb-3 text-end">
-                <button class="btn btn-primary" href="#" type="submit">Inicia Sesion</button>
-                <a class="btn btn-outline-danger" href="#">Cancelar</a>
+                <button class="btn btn-primary" type="submit">Inicia Sesion</button>
+                <a class="btn btn-outline-danger" th:href="@{~/market}">Cancelar</a>
             </div>
         </div>
 </div>

@@ -13,7 +13,7 @@
 </head>
 <body>
 <!--NavBar-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-1" style="margin-bottom: 2rem">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-2">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">PUCMM Eventos</a>
         <button aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
@@ -23,13 +23,35 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" href="#">Servicios</a>
+                    <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
+                    <div th:if="${user != null}">
+                        <div th:if="${user.permiso == 'ADMIN'}">
+                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/usuarios/todos}">Usuarios</a>
+                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/estadisticas}">Estadisticas</a>
+                        </div>
+    
+                        <div th:if="${user.permiso == 'CLIENTE'}">
+                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/carrito}">Carrito</a>
+                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/historial}">Historial</a>
+                        </div>
+
+                        <div th:if="${user.permiso == 'EMPLEADO'}">
+                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/historial}">Historial</a>
+                        </div>
+
+                    </div>    
                 </li>
 
             </ul>
             <div class="d-flex">
-                <a aria-current="page" class="btn btn-outline-light m-3" href="#">Log-In</a>
-                <a aria-current="page" class="btn btn-primary m-3" href="#">Registrarse</a>
+                <div th:if="${user != null}">
+                    <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/logout}">Cerrar Sesion<a>
+                 </div>
+                 <div th:unless="${user != null}">
+                    <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/login}">Log-In</a>
+                    <a aria-current="page" class="btn btn-primary m-3" th:href="@{~/registro}">Registrarse</a>
+                 </div>
+                
             </div>
         </div>
     </div>
@@ -60,7 +82,10 @@
                     <strong>Precio: RD$1,000.00</strong>
                 </div>
                 <div class="mb-3 text-end" style="margin-right: 1rem;">
-                    <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    <form th:action="@{~/addServicio}" method="post">
+                        <input type="number" value="0" name="producto" id="producto" hidden>
+                        <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -83,7 +108,10 @@
                     <strong>Precio: RD$5,000.00</strong>
                 </div>
                 <div class="mb-3 text-end" style="margin-right: 1rem;">
-                    <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    <form th:action="@{~/addServicio}" method="post">
+                        <input type="number" value="1" name="producto" id="producto" hidden>
+                        <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -105,7 +133,10 @@
                     <strong>Precio: RD$3,000.00</strong>
                 </div>
                 <div class="mb-3 text-end" style="margin-right: 1rem;">
-                    <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    <form th:action="@{~/addServicio}" method="post">
+                        <input type="number" value="2" name="producto" id="producto" hidden>
+                        <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -127,7 +158,10 @@
                     <strong>Precio: RD$4,000.00</strong>
                 </div>
                 <div class="mb-3 text-end" style="margin-right: 1rem;">
-                    <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    <form th:action="@{~/addServicio}" method="post">
+                        <input type="number" value="3" name="producto" id="producto" hidden>
+                        <button class="btn btn-primary" href="#" type="submit">Agregar al Carrito</button>
+                    </form>
                 </div>
             </div>
         </div>

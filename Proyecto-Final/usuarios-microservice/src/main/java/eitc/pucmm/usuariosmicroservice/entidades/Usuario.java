@@ -11,6 +11,8 @@ public class Usuario implements Serializable {
 
     private String nombre;
     private String telefono;
+    
+    @Column(unique=true)
     private String correo;
     private String direccion;
     private String password;
@@ -18,7 +20,6 @@ public class Usuario implements Serializable {
     @Enumerated(EnumType.STRING)
     private EnumPermiso permiso;
 
-    public void Usuario(){}
 
     public Usuario() {}
     

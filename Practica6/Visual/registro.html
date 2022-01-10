@@ -74,23 +74,18 @@
                     "Matricula": data[3]['value'],
                     "Laboratorio": data[4]['value']
                 }
-                aux = JSON.stringify(aux)
+                aux = JSON.stringify(reserva)
                 console.log(aux) 
                 var url = "https://gh1rhthe41.execute-api.us-east-1.amazonaws.com/default/Reservas";
 
                 var xhr = new XMLHttpRequest();
-                xhr.open("PUT", url);
-
-                xhr.setRequestHeader("Content-Type", "application/json");
-
-                xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    console.log(xhr.status);
-                    console.log(xhr.responseText);
-                }};
-
+                xhr.open('POST', url);
+                xhr.onreadystatechange=(e)=>{
+                  console.log(e)
+              }
                 xhr.send(aux);
-
+                
+                
             }
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

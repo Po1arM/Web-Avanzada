@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<Usuario,Long> {
     Usuario findByCorreo(String correo);
     @Query("select u.correo from Usuario u where u.permiso = :permiso")
     List<String> findCorreoByPermiso(@Param("permiso") EnumPermiso permiso);
+
+    List<Usuario> findByPermiso(EnumPermiso permiso);
 }
