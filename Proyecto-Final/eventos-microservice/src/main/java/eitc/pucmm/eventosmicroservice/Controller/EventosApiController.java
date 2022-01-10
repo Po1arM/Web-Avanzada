@@ -1,16 +1,10 @@
 package eitc.pucmm.eventosmicroservice.Controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import com.google.gson.*;
 
 import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,42 +44,18 @@ public class EventosApiController {
         return compraRepository.findAllByIdUsuario(aux);
     }
 
-    //Funciona
     @PostMapping("/compra/{id}")
-    List<Evento> realizaCompra(@RequestBody String body,@PathVariable String id) throws IOException{
+    void realizaCompra(@RequestBody String body,@PathVariable String id) throws IOException{
         
         Compra compra = new Compra();
         compra.setIdUsuario(Long.parseLong(id));
         compra.setFecha(new Date());
+        compra.setTotal(parseEventos(body, compra.getId()));
+
         compraRepository.save(compra);
 
-        List<Evento> eventos = parseEventos(body, compra.getId());
-
-        //Llamada a mail-microservice
-        URL url = new URL("http://mail-microservice:8080/notificacion/compra");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json; utf-8");
-        con.setRequestProperty("Accept", "application/json");
-        con.setDoOutput(true);
-        try(OutputStream os = con.getOutputStream()) {
-            byte[] input = new Gson().toJson(body).getBytes("utf-8");
-            os.write(input, 0, input.length);			
-        }
-        try(BufferedReader br = new BufferedReader(
-            new InputStreamReader(con.getInputStream(), "utf-8"))) {
-              StringBuilder response = new StringBuilder();
-              String responseLine = null;
-              while ((responseLine = br.readLine()) != null) {
-                  response.append(responseLine.trim());
-              }
-              System.out.println(response.toString());
-          }           
-
-        return eventos;
     }
 
-    //Funciona
     @GetMapping("/compra/{id}")
     Compra getCompraById(@PathVariable String id){
         long aux = Long.parseLong(id);
@@ -122,18 +92,28 @@ public class EventosApiController {
         return aux;    
     }
 
-    private List<Evento> parseEventos(String body, long l) {
-        JsonObject object = new Gson().fromJson(body,JsonObject.class);
+    private int parseEventos(String body, long l) {
+        System.out.println(body);
+        int[] carrito = {0,0,0,0};
 
-        JsonArray array = new Gson().fromJson(object.get("eventos"), JsonArray.class);
-        List<Evento> eventos = new ArrayList<>();
-        Evento aux;
-        for(int i = 0; i < array.size();i++){
-            aux = new Gson().fromJson(array.get(i), Evento.class);
-            aux.setIdCompra(l);
-            eventosRepository.save(aux);
-            eventos.add(aux);
+        String aux = body.substring(1,body.length()-1);
+        List<String> myList = new ArrayList<String>(Arrays.asList(aux.split(",")));
+        for (int i = 0; i < 4; i++) {
+            carrito[i] = Integer.parseInt(myList.get(i).replaceAll("\\s+",""));
         }
-        return eventos;
+
+        String[] productos = {"Pre-Boda","Boda","Cumpleaños","Vide de Evento"};
+        int[] precio = {1000,5000,3000,4000};
+        int total = 0;
+        Evento evento;
+        for(int i = 0; i < 4; i++){
+            if(carrito[i] != 0 ){
+                evento = new Evento(productos[i], precio[i], carrito[i]);
+                evento.setIdCompra(l);
+                eventosRepository.save(evento);
+                total += precio[i] * carrito[i];
+            }
+        }
+        return total;
     }
 }

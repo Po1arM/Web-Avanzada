@@ -16,6 +16,7 @@ public class Compra implements Serializable{
     private long id;
     private long idUsuario;
     private Date fecha;
+    private int total;
 
     public Compra() {
     }
@@ -42,6 +43,14 @@ public class Compra implements Serializable{
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    public int getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
 }

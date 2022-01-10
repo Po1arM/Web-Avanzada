@@ -24,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -44,22 +45,36 @@ public class MailApiController {
     public boolean notificarRegistro(@RequestBody String body){
         JsonObject json = new Gson().fromJson(body, JsonObject.class);
         String correo = json.get("correo").getAsString();
-        String html = definirHtml(body, "confirmacionRegistro.html");
-        enviarCorreo(correo, "Confirmacion de registro - PUCMM Eventos", html);
-        return true;
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> model;
+        try {
+            model = mapper.readValue(body, Map.class);
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(model);
+            String html = thymeleafTemplateEngine.process("confirmacionRegistro.html", thymeleafContext);
+            System.out.println(html);
+            enviarCorreo(correo, "Confirmacion de registro - PUCMM Eventos", html);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+        
     }
 
     @PostMapping("/notificacion/compra")
     public boolean notificarCompra(@RequestBody String body) throws IOException{
         JsonObject json = new Gson().fromJson(body, JsonObject.class);
-        notificarEmpleados(body);
+        
+        notificarEmpleados(json.get("servicios").getAsString());
         String correo = json.get("correo").getAsString();
-        String mail = definirHtml(body,"facturaCliente.html");
+        String mail = definirHtml(json.get("servicios").getAsString(),"facturaCliente.html");
         return enviarCorreo(correo , "Notificacion de compra", mail);
     }
 
     public void notificarEmpleados(String body) throws IOException {
-        String mail =  definirHtml(body,"norificacionEmpleados.html");
+        String mail =  definirHtml(body,"notificacionEmpleados.html");
 
         URL url = new URL("http://user-microservice:8080/usuarios/tipo/EMPLEADO");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -76,20 +91,39 @@ public class MailApiController {
     }
 
     private String definirHtml(String body, String template) {
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> model;
-        try {
-            model = mapper.readValue(body, Map.class);
-            Context thymeleafContext = new Context();
-            thymeleafContext.setVariables(model);
-            String html = thymeleafTemplateEngine.process(template, thymeleafContext);
-            System.out.println(html);
-            return html;
-        } catch (IOException e) {
-            e.printStackTrace();
+        int[] carrito = {0,0,0,0};
+
+        String aux = body.substring(1,body.length()-1);
+        aux = aux.replaceAll("\\s+","");
+        System.out.println(aux);
+        List<String> myList = new ArrayList<String>(Arrays.asList(aux.split(",")));
+        for (int i = 0; i < 4; i++) {
+            carrito[i] = Integer.parseInt(myList.get(i));
         }
-        return ""; 
+
+        String[] productos = {"Pre-Boda","Boda","Cumpleaños","Vide de Evento"};
+        int[] precio = {1000,5000,3000,4000};
+        int total = 0;
+        Evento evento;
+        List<Evento> eventos = new ArrayList<>();
+        for(int i = 0; i < 4; i++){
+            if(carrito[i] != 0 ){
+                evento = new Evento(productos[i], precio[i], carrito[i]);
+                eventos.add(evento);
+                total += precio[i]*carrito[i];
+            }
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("servicios", eventos);
+        model.put("total", total);
+        Context thymeleafContext = new Context();
+        thymeleafContext.setVariables(model);
+        String html = thymeleafTemplateEngine.process(template, thymeleafContext);
+        return html;
+
     }
+    
 
     public boolean enviarCorreo(String destinatario,String subject,String html){
         try {

@@ -22,8 +22,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
+                <div class="d-flex">
+                                        <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
                     <div th:if="${user != null}">
                         <div th:if="${user.permiso == 'ADMIN'}">
                             <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/usuarios/todos}">Usuarios</a>
@@ -40,7 +40,7 @@
                         </div>
 
                     </div>    
-                </li>
+                </div>
 
             </ul>
             <div class="d-flex">
@@ -74,7 +74,7 @@
     
                         <div class="col">
                             <div class="mb-3 text-end" style="margin-right: 1rem;">
-                                <form th:action="@{~/~/delServicio}" method="post">
+                                <form th:action="@{~/delServicio}" method="post">
                                     <input type="number" th:value="${servicio.numAux}" name="producto" hidden>
                                     <button class="btn btn-danger" type="submit">Eliminar</button>
                                 </form>

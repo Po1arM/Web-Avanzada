@@ -23,9 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()            
-            .antMatchers("/registro","/market","/").permitAll()
+            .antMatchers("/registro").permitAll()
             .antMatchers("/addServicio","/carrito","/realizarCompra").hasAnyAuthority("CLIENTE")//cualquier llamada debe ser validada
-            .antMatchers("/estadistica","/historial").hasAnyAuthority("ADMIN","CLIENTE")
+            .antMatchers("/estadistica","/historial","/market","/").hasAnyAuthority("ADMIN","CLIENTE")
             .antMatchers("/usuarios/**").hasAnyAuthority("ADMIN")
             .anyRequest().authenticated()
             .and()

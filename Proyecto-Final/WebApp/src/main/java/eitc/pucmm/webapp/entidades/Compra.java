@@ -8,7 +8,8 @@ public class Compra {
     private List<Evento> eventos;
     private long idUsuario;
     private long idCompra;
-    private Date fecha;
+    private String fecha;
+    private int total;
 
     public Compra() {
     }
@@ -38,11 +39,20 @@ public class Compra {
         this.idCompra = idEmpleado;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return this.fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
+
+    public int getTotal() {
+        return this.total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
 }

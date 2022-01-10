@@ -22,7 +22,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-                <li class="nav-item">
+                <div class="d-flex">
                     <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
                     <div th:if="${user != null}">
                         <div th:if="${user.permiso == 'ADMIN'}">
@@ -40,7 +40,7 @@
                         </div>
 
                     </div>    
-                </li>
+                </div>
 
             </ul>
             <div class="d-flex">

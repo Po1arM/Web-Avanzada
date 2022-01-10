@@ -7,25 +7,27 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 
+import eitc.pucmm.webapp.entidades.Compra;
 import eitc.pucmm.webapp.entidades.Evento;
 import eitc.pucmm.webapp.entidades.Usuario;
 
@@ -89,14 +91,10 @@ public class ApiController {
 
 
     @RequestMapping(value = "/addServicio", method = RequestMethod.POST )
-    public String addToCarrito(WebRequest request, Model model){
+    public String addToCarrito(WebRequest request, Model model) throws IOException{
         Usuario user;
-        try {
-            user = buscarUsuarioActivo();
-            model.addAttribute("user", user);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        user = buscarUsuarioActivo();
+        model.addAttribute("user", user);
         carrito[Integer.valueOf(request.getParameter("producto"))]++;
         return "market";
     }
@@ -123,12 +121,14 @@ public class ApiController {
                 eventosAux.add(aux);
                 total += precio[i]*carrito[i];
                 aux.setNumAux(i);
-            }
+            }    
         }
         model.addAttribute("servicios", eventosAux);
         model.addAttribute("total", total);
         return "cart";
-    }
+        }
+
+        
 
     //compras busca por id, no por correo
     //Convertir json a arreglo de usuarios
@@ -140,44 +140,51 @@ public class ApiController {
         
         String response = makeRequest("GET", "", "http://events-microservice:8080/compras/"+user.getId());
         JsonArray object = new Gson().fromJson(response, JsonArray.class);
-        List<Evento> eventos = new ArrayList<>();
+        List<Compra> eventos = new ArrayList<>();
         if(object != null){
             for(int i = 0; i < object.size();i++){
-                eventos.add(new Gson().fromJson(object.get(i), Evento.class));
+                Compra compra = new Gson().fromJson(object.get(i), Compra.class);
+                compra.setFecha(compra.getFecha().substring(0, 10));
+                eventos.add(compra);
             }
         }
+
+        eventos = buscarEventos(eventos);
 
         model.addAttribute("compras", eventos);
 
         return "historial";
     }
 
+
     @RequestMapping("/procesarCompra")
     public String procesarCompra(Model model) throws IOException{
-        /*Usuario user = buscarUsuarioActivo();
+        Usuario user = buscarUsuarioActivo();
         model.addAttribute("user", user);
-
-        JsonObject object = new Gson().fromJson("", JsonObject.class);
-
+        
         Evento aux;
         int total = 0;
         List<Evento> eventosAux = new ArrayList<>();
-        JsonArray array = new Gson().fromJson("", JsonArray.class);
-
         for(int i = 0; i < 4; i++){
             if(carrito[i] != 0 ){
                 aux = new Evento(productos[i], precio[i], carrito[i]);
                 eventosAux.add(aux);
                 total += precio[i]*carrito[i];
                 aux.setNumAux(i);
-                array.add(aux);
             }
         }
-        object.add("servicios", eventosAux);
-        object.addProperty("total", total);
-        object.addProperty("correo", user.getCorreo());
-        model.addAttribute("eventos", eventosAux);*/
+        String response = makeRequest("POST", carrito, "http://events-microservice:8080/compra/"+user.getId());
+
+        JsonObject json = new JsonObject();
+        json.addProperty("correo", user.getCorreo());
+        json.addProperty("servicios",Arrays.toString(carrito));
+        makeRequest("POST",json, "http://mail-microservice:8080/notificacion/compra");
+
+        carrito = new int[] {0, 0, 0,0};
+        model.addAttribute("servicios", eventosAux);
+        model.addAttribute("total", total);
         return "resumen";
+        
     }
 
     //Convertir json a arreglo de usuarios
@@ -222,7 +229,48 @@ public class ApiController {
         return "redirect:/usuarios/todos";
     }
 
-    
+    @RequestMapping("/estadisticas/{filtro}")
+    public String estadisticas(@PathVariable String filtro, Model model) throws IOException{
+        Usuario user = buscarUsuarioActivo();
+        model.addAttribute("user", user);
+        
+        String response = makeRequest("GET", "", "http://events-microservice:8080/compras/general/"+filtro);
+        JsonArray object = new Gson().fromJson(response, JsonArray.class);
+        List<Compra> eventos = new ArrayList<>();
+        if(object != null){
+            for(int i = 0; i < object.size();i++){
+                Compra compra = new Gson().fromJson(object.get(i), Compra.class);
+                compra.setFecha(compra.getFecha().substring(0, 10));
+                eventos.add(compra);
+            }
+        }
+
+        eventos = buscarEventos(eventos);
+        String datos = generarGrafico(eventos);
+        model.addAttribute("estats", datos);
+        model.addAttribute("compras", eventos);
+        return "estadisticas";
+    }
+
+    private String generarGrafico(List<Compra> compras) {
+
+        Map<String, Integer> mapa = new HashMap<>();
+        for (Compra aux : compras) {
+            for (Evento evento : aux.getEventos()) {
+                
+                if(mapa.containsKey(evento.getNombre())){
+                    int valAux = mapa.get(evento.getNombre());
+                    mapa.put(evento.getNombre(), evento.getCantidad() + valAux);
+                }else {
+                    mapa.put(evento.getNombre(), evento.getCantidad());
+                }
+                System.out.println(evento.getNombre()+mapa.get(evento.getNombre()));
+            }
+        }
+        System.out.println(mapa.toString());
+        return mapa.toString();
+    }
+
     private boolean validar(String str,String tipo) {
         Pattern pattern;
         if(tipo.equalsIgnoreCase("correo")){
@@ -270,15 +318,31 @@ public class ApiController {
     }
 
     private Usuario buscarUsuarioActivo() throws IOException {
-        if(SecurityContextHolder.getContext().getAuthentication() == null){
-            return null;
-        }
-            String correo = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
-            String response = makeRequest("GET","", "http://user-microservice:8080/usuarios/correo/"+correo);
+        
+        String correo = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
+        String response = makeRequest("GET","", "http://user-microservice:8080/usuarios/correo/"+correo);
 
-            return new Gson().fromJson(response, Usuario.class);
+        return new Gson().fromJson(response, Usuario.class);
         
     }
 
+    private List<Compra> buscarEventos(List<Compra> compras) throws IOException {
+
+        for (Compra compra : compras) {
+            String response = makeRequest("GET", "", "http://events-microservice:8080/compra/eventos/"+compra.getIdCompra());
+            JsonArray object = new Gson().fromJson(response, JsonArray.class);
+            List<Evento> eventos = new ArrayList<>();
+
+            if(object != null){
+                for(int i = 0; i < object.size();i++){
+                    Evento evento = new Gson().fromJson(object.get(i), Evento.class);
+                    eventos.add(evento);
+                }
+                compra.setEventos(eventos);
+            }
+        }
+
+        return compras;
+    }
 }

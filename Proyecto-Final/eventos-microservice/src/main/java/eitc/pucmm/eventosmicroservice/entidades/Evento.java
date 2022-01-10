@@ -23,6 +23,9 @@ public class Evento implements Serializable{
         this.cantidad = carrito;
     }
 
+    public Evento(){
+    }
+
     public String getNombre() {
         return this.nombre;
     }
