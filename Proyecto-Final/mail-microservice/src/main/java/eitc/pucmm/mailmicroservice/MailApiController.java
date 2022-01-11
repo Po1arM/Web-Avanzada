@@ -82,11 +82,15 @@ public class MailApiController {
         InputStream response = con.getInputStream();
         try (Scanner scanner = new Scanner(response)) {
             String aux = scanner.useDelimiter("\\A").next();
+            if(!aux.equalsIgnoreCase("[]")){
             aux = aux.substring(1,aux.length()-1);
             List<String> myList = new ArrayList<String>(Arrays.asList(aux.split(",")));
             for (String string : myList) {
-                enviarCorreo(string.substring(1,string.length()-1), "Un cliente ha adquirido nuestros servicios", mail);
+
+                System.out.println(string);
+                    enviarCorreo(string.substring(1,string.length()-1), "Un cliente ha adquirido nuestros servicios", mail);
             }
+        }
         }
     }
 

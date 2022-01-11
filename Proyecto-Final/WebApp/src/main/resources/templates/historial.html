@@ -28,7 +28,7 @@
                     <div th:if="${user != null}">
                         <div th:if="${user.permiso == 'ADMIN'}">
                                 <a aria-current="page" class="nav-link active" th:href="@{~/usuarios/todos}">Usuarios</a>
-                                <a aria-current="page" class="nav-link active" th:href="@{~/estadisticas}">Estadisticas</a>
+                                <a aria-current="page" class="nav-link active" th:href="@{~/estadisticas/todos}">Estadisticas</a>
                         </div>
     
                         <div th:if="${user.permiso == 'CLIENTE'}">
