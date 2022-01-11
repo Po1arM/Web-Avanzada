@@ -70,7 +70,7 @@ public class ApiController {
             if(validar(correo,"correo")){
                 if( validar(telefono,"telefono")){
                 Usuario aux = new Usuario(correo,nombre,telefono,direccion);
-                String msResponse = makeRequest("POST",aux,"http://user-microservice:8080/usuarios");
+                String msResponse = makeRequest("POST",aux,"http://USER-MICROSERVICE:8080/usuarios");
                 if(msResponse != null){
                     return "login";
                 }
@@ -138,7 +138,7 @@ public class ApiController {
         Usuario user = buscarUsuarioActivo();
         model.addAttribute("user", user);
         
-        String response = makeRequest("GET", "", "http://events-microservice:8080/compras/"+user.getId());
+        String response = makeRequest("GET", "", "http://EVENTS-MICROSERVICE:8080/compras/"+user.getId());
         JsonArray object = new Gson().fromJson(response, JsonArray.class);
         List<Compra> eventos = new ArrayList<>();
         if(object != null){
@@ -173,12 +173,12 @@ public class ApiController {
                 aux.setNumAux(i);
             }
         }
-        String response = makeRequest("POST", carrito, "http://events-microservice:8080/compra/"+user.getId());
+        String response = makeRequest("POST", carrito, "http://EVENTS-MICROSERVICE:8080/compra/"+user.getId());
 
         JsonObject json = new JsonObject();
         json.addProperty("correo", user.getCorreo());
         json.addProperty("servicios",Arrays.toString(carrito));
-        makeRequest("POST",json, "http://mail-microservice:8080/notificacion/compra");
+        makeRequest("POST",json, "http://MAIL-MICROSERVICE:8080/notificacion/compra");
 
         carrito = new int[] {0, 0, 0,0};
         model.addAttribute("servicios", eventosAux);
@@ -193,7 +193,7 @@ public class ApiController {
         Usuario user = buscarUsuarioActivo();
         model.addAttribute("user", user);
 
-        String response = makeRequest("GET", tipo, "http://user-microservice:8080/usuarios/lista/"+tipo);
+        String response = makeRequest("GET", tipo, "http://USER-MICROSERVICE:8080/usuarios/lista/"+tipo);
         JsonArray object = new Gson().fromJson(response, JsonArray.class);
         List<Usuario> usuarios = new ArrayList<>();
         if(object != null){
@@ -212,7 +212,7 @@ public class ApiController {
         Usuario user = buscarUsuarioActivo();
         model.addAttribute("user", user);
 
-        String response = makeRequest("GET", id, "http://user-microservice:8080/usuarios/"+id);
+        String response = makeRequest("GET", id, "http://USER-MICROSERVICE:8080/usuarios/"+id);
         Usuario aux = new Gson().fromJson(response, Usuario.class);
         model.addAttribute("usuario", aux);
         //agregar historial de usuario
@@ -221,7 +221,7 @@ public class ApiController {
 
     @RequestMapping(value="/usuarios/mod", method = RequestMethod.PUT)
     public String moddificarUsuario(WebRequest request, Model model) throws IOException{
-        String response = makeRequest("PUT",request.toString(), "http://user-microservice:8080/usuarios");
+        String response = makeRequest("PUT",request.toString(), "http://USER-MICROSERVICE:8080/usuarios");
         Usuario aux = new Gson().fromJson(response, Usuario.class);
 
         model.addAttribute("usuario", aux);
@@ -234,7 +234,7 @@ public class ApiController {
         Usuario user = buscarUsuarioActivo();
         model.addAttribute("user", user);
         
-        String response = makeRequest("GET", "", "http://events-microservice:8080/compras/general/"+filtro);
+        String response = makeRequest("GET", "", "http://EVENTS-MICROSERVICE:8080/compras/general/"+filtro);
         JsonArray object = new Gson().fromJson(response, JsonArray.class);
         List<Compra> eventos = new ArrayList<>();
         if(object != null){
@@ -321,7 +321,7 @@ public class ApiController {
         
         String correo = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
-        String response = makeRequest("GET","", "http://user-microservice:8080/usuarios/correo/"+correo);
+        String response = makeRequest("GET","", "http://USER-MICROSERVICE:8080/usuarios/correo/"+correo);
 
         return new Gson().fromJson(response, Usuario.class);
         
@@ -330,7 +330,7 @@ public class ApiController {
     private List<Compra> buscarEventos(List<Compra> compras) throws IOException {
 
         for (Compra compra : compras) {
-            String response = makeRequest("GET", "", "http://events-microservice:8080/compra/eventos/"+compra.getIdCompra());
+            String response = makeRequest("GET", "", "http://EVENTS-MICROSERVICE:8080/compra/eventos/"+compra.getIdCompra());
             JsonArray object = new Gson().fromJson(response, JsonArray.class);
             List<Evento> eventos = new ArrayList<>();
 

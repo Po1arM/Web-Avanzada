@@ -11,9 +11,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +52,7 @@ public class UserApiController {
         aux.setPermiso(EnumPermiso.CLIENTE);
         aux.setPassword(aux.getNombre()+aux.getTelefono().substring(8, 11));
 
-        URL url = new URL("http://mail-microservice:8080/notificacion/registro");
+        URL url = new URL("http://MAIL-MICROSERVICE:8080/notificacion/registro");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json; utf-8");

@@ -76,7 +76,7 @@ public class MailApiController {
     public void notificarEmpleados(String body) throws IOException {
         String mail =  definirHtml(body,"notificacionEmpleados.html");
 
-        URL url = new URL("http://user-microservice:8080/usuarios/tipo/EMPLEADO");
+        URL url = new URL("http://USER-MICROSERVICE:8080/usuarios/tipo/EMPLEADO");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         InputStream response = con.getInputStream();
