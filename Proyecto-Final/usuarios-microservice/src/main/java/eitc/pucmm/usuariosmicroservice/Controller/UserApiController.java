@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class UserApiController {
     
     @Autowired
     UserRepository userRepository;
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();  
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     //Funciona
     @GetMapping("/usuarios/lista/{permiso}")
@@ -35,6 +36,11 @@ public class UserApiController {
             return userRepository.findAll();
         }
         return userRepository.findByPermiso(EnumPermiso.valueOf(permiso));
+    }
+
+    @GetMapping("/prueba")
+    String prueba(){
+        return "Hola";
     }
 
     //Funciona
