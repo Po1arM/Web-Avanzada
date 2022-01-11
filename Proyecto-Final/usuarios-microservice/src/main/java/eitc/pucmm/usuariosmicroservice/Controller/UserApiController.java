@@ -85,9 +85,22 @@ public class UserApiController {
             aux.setNombre(json.get("nombre").getAsString());
             aux.setDireccion(json.get("direccion").getAsString());
             aux.setTelefono(json.get("telefono").getAsString());
-            aux.setPermiso(EnumPermiso.valueOf(json.get("permiso").getAsString()));
 
+            switch (json.get("permiso").getAsString()) {
+                case "EMPLEADO":
+                    aux.setPermiso(EnumPermiso.EMPLEADO);
+                    break;
+                case "CLIENTE":
+                    aux.setPermiso(EnumPermiso.CLIENTE);
+                break;
 
+                case "ADMIN":
+                    aux.setPermiso(EnumPermiso.ADMIN);
+                break;
+
+                default:
+                    break;
+            }
             userRepository.save(aux);
             return true;
         } catch (Exception e) {

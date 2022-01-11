@@ -26,8 +26,8 @@
                     <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
                     <div th:if="${user != null}">
                         <div th:if="${user.permiso == 'ADMIN'}">
-                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/usuarios/todos}">Usuarios</a>
-                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/estadisticas}">Estadisticas</a>
+                            <a aria-current="page" class="nav-link active" th:href="@{~/usuarios/todos}">Usuarios</a>
+                            <a aria-current="page" class="nav-link active" th:href="@{~/estadisticas}">Estadisticas</a>
                         </div>
 
                     </div>    

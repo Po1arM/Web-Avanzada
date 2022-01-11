@@ -26,13 +26,13 @@
                     <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
                     <div th:if="${user != null}">
                         <div th:if="${user.permiso == 'ADMIN'}">
-                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/usuarios/todos}">Usuarios</a>
-                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/estadisticas}">Estadisticas</a>
+                            <a aria-current="page" class="nav-link active3" th:href="@{~/usuarios/todos}">Usuarios</a>
+                            <a aria-current="page" class="nav-link active" th:href="@{~/estadisticas}">Estadisticas</a>
                         </div>
     
                         <div th:if="${user.permiso == 'CLIENTE'}">
-                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/carrito}">Carrito</a>
-                            <a aria-current="page" class="btn btn-outline-light m-3" th:href="@{~/historial}">Historial</a>
+                            <a aria-current="page" class="nav-link active" th:href="@{~/carrito}">Carrito</a>
+                            <a aria-current="page" class="nav-link active" th:href="@{~/historial}">Historial</a>
                         </div>
 
                         <div th:if="${user.permiso == 'EMPLEADO'}">

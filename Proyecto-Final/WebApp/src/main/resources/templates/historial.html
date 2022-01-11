@@ -22,26 +22,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+                <div class="d-flex">
+
                     <a aria-current="page" class="nav-link active" th:href="@{~/market}">Servicios</a>
                     <div th:if="${user != null}">
                         <div th:if="${user.permiso == 'ADMIN'}">
-                            <li class="nav-item">
                                 <a aria-current="page" class="nav-link active" th:href="@{~/usuarios/todos}">Usuarios</a>
-                            </li>
-                            <li class="nav-item">
                                 <a aria-current="page" class="nav-link active" th:href="@{~/estadisticas}">Estadisticas</a>
-                            </li>
                         </div>
     
                         <div th:if="${user.permiso == 'CLIENTE'}">
-                            <li class="nav-item">
                                 <a aria-current="page" class="nav-link active" th:href="@{~/carrito}">Carrito</a>
-                            </li>
-                            <li class="nav-item">
                                 <a aria-current="page" class="nav-link active" th:href="@{~/historial}">Historial</a>
-                            </li>
 
-                            </div>
 
                         <div th:if="${user.permiso == 'EMPLEADO'}">
                             <li class="nav-item">
@@ -49,7 +42,8 @@
                             </li>
                         </div>
 
-                    </div>    
+                    </div>   
+                    </div> 
                 </li>
 
             </ul>
