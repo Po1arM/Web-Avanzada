@@ -16,7 +16,7 @@ Added Proxy / Load Balancering servers to the mock API app.<br>
 ## Practice 6:
 Implemented and deployed serverless functions<br>
 
-##Final Proyect: 
+## Final Proyect: 
 The goal was to integrate and deploy a complex microservice architecture web app. in other words, most of the web app itself was given and our job was to configure everything and deploy it.
 The project implements:
 * perimetral server
